@@ -1,5 +1,5 @@
 * create notification tasks for quiz, PE 
 * link GLO, Linked-in profiles
-* scan GLO groups
+* scan GLO groups and another RSS/feed sources
 * show assigned tasks from Jira, Helpdesk
-* unreaded emails
+* notification about unreaded emails
