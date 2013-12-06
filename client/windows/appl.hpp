@@ -24,13 +24,9 @@ public:
 protected:
 	static const atom::po::id_t	po_desc					=	1;
 	static const atom::po::id_t	po_help					=	po_desc + 1;
-	static const atom::po::id_t	po_host					=	po_help + 1;
-	static const atom::po::id_t	po_port					=	po_host + 1;
-	static const atom::po::id_t	po_wifi_scan			=	po_port + 1;
-	static const atom::po::id_t	po_gui					=	po_wifi_scan + 1;
-	static const atom::po::id_t	po_gui_width			=	po_gui + 1;
-	static const atom::po::id_t	po_gui_height			=	po_gui_width + 1;
-	static const atom::po::id_t	po_move					=	po_gui_height + 1;
+	static const atom::po::id_t	po_dock					=	po_help + 1;
+	static const atom::po::id_t	po_alignment			=	po_dock + 1;
+	static const atom::po::id_t	po_transparency			=	po_alignment + 1;
 
 private:
 	///
