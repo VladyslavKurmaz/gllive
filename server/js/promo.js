@@ -11,15 +11,22 @@ var	mesh				=	null;
 var play				= 1;
 var width				=	0;
 var width				=	0;
-var bk_color 		= 0x808080;
+var bk_color 		= 0x000000;
 var fov					= 60;
 var near_plane	=	0.1;
 var far_plane		=	100;
 var last_time		=	0;
-var tex_name		= 'img/earthmap.jpg';
+var tex_name		= 'img/world.jpg';
+
+
 
 init();
 animate();
+
+function calc_dims() {
+	width = window.innerWidth;
+	height = window.innerHeight;
+}
 
 function init() {
 	last_time = Date.now();
@@ -31,35 +38,41 @@ function init() {
 	});
 	//
 	container = document.getElementById( 'viewport' );
-	width = $('#viewport').innerWidth();
-	height = $('#viewport').innerHeight();
+	calc_dims();
 	//
 	scene = new THREE.Scene();
 	//
 	camera = new THREE.PerspectiveCamera( fov, width / height, near_plane, far_plane );
-  camera.position.z = 2;
+  camera.position.z = 2.5;
   scene.add( camera );
 	//
-
 	material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( tex_name, new THREE.UVMapping(), function()
 		{
-			geometry = new THREE.SphereGeometry( 1, 32, 32 );
-			mesh = new THREE.Mesh(geometry, material);
-  		scene.add( mesh );
+			geometry = new THREE.SphereGeometry( 1, 20, 15 );
+			geometry.dynamic = true;
+			mesh = new THREE.Mesh( geometry, material );
+			scene.add( mesh );
+			//
+			$("img[id='progress']").css("visibility", "hidden");
+			//
 			animate();
-			$("img[id='loader']").css("visibility", "hidden");
 		} ), overdraw: true } );
-/*
-	geometry = new THREE.CubeGeometry( 1, 1, 1 );
-	material = new THREE.MeshBasicMaterial( { color:0xFF0000 } );
-*/
-
-	//renderer = new THREE.CanvasRenderer( { antialias: true } );
+	//
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	//
   renderer.setSize( width, height );
+  renderer.autoClear = false;
 	renderer.setClearColor( bk_color, 1 );
 	container.appendChild( renderer.domElement );
+	//
+	window.addEventListener( 'resize', resize, false );
+}
+
+function resize( event ) {
+	calc_dims();
+	camera.aspect = width / height;
+	camera.updateProjectionMatrix();
+	renderer.setSize( width, height );
 }
 
 function animate() {
@@ -79,5 +92,6 @@ function render() {
 		mesh.rotation.y += mult * 0.0003;
 		mesh.rotation.z = 0.0;
 	}
+	renderer.clear();
 	renderer.render(scene, camera);
 }
