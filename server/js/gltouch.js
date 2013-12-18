@@ -16,7 +16,7 @@ var fov					= 60;
 var near_plane	=	0.1;
 var far_plane		=	100;
 var last_time		=	0;
-var tex_name		= 'img/earthmap.jpg';
+var tex_name		= 'img/world.jpg';//'img/earthmap.jpg';
 
 
 
