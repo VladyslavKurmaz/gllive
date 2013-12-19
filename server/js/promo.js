@@ -2,6 +2,7 @@
 var container		=	null;
 var renderer		= null;
 var	scene				=	null;
+var	scenea			=	null;
 var	camera			=	null;
 var	controls		=	null;
 var geometry		= null;
@@ -28,7 +29,54 @@ function calc_dims() {
 	height = window.innerHeight;
 }
 
+
 function init() {
+
+var Shaders = {
+    'earth' : {
+      uniforms: {
+        'texture': { type: 't', value: 0, texture: null }
+      },
+      vertexShader: [
+        'varying vec3 vNormal;',
+        'varying vec2 vUv;',
+        'void main() {',
+          'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
+          'vNormal = normalize( normalMatrix * normal );',
+          'vUv = uv;',
+        '}'
+      ].join('\n'),
+      fragmentShader: [
+        'uniform sampler2D texture;',
+        'varying vec3 vNormal;',
+        'varying vec2 vUv;',
+        'void main() {',
+          'vec3 diffuse = texture2D( texture, vUv ).xyz;',
+          'float intensity = 1.05 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) );',
+          'vec3 atmosphere = vec3( 1.0, 1.0, 1.0 ) * pow( intensity, 3.0 );',
+          'gl_FragColor = vec4( diffuse + atmosphere, 1.0 );',
+        '}'
+      ].join('\n')
+    },
+    'atmosphere' : {
+      uniforms: {},
+      vertexShader: [
+        'varying vec3 vNormal;',
+        'void main() {',
+          'vNormal = normalize( normalMatrix * normal );',
+          'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
+        '}'
+      ].join('\n'),
+      fragmentShader: [
+        'varying vec3 vNormal;',
+        'void main() {',
+          'float intensity = pow( 0.8 - dot( vNormal, vec3( 0, 0, 1.0 ) ), 12.0 );',
+          'gl_FragColor = vec4( 1.0, 1.0, 1.0, 1.0 ) * intensity;',
+        '}'
+      ].join('\n')
+    }
+};
+
 	last_time = Date.now();
 	//
 	$( "#viewport" ).mousedown(function() {
@@ -46,10 +94,10 @@ function init() {
   camera.position.z = 2.5;
   scene.add( camera );
 	//
+	geometry = new THREE.SphereGeometry( 1, 20, 15 );
+
 	material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( tex_name, new THREE.UVMapping(), function()
 		{
-			geometry = new THREE.SphereGeometry( 1, 20, 15 );
-			geometry.dynamic = true;
 			mesh = new THREE.Mesh( geometry, material );
 			scene.add( mesh );
 			//
@@ -57,6 +105,28 @@ function init() {
 			//
 			animate();
 		} ), overdraw: true } );
+	//
+
+	scenea = new THREE.Scene();
+	var shader = Shaders['atmosphere'];
+  var uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+      
+  var materiala = new THREE.ShaderMaterial({
+
+          uniforms: uniforms,
+          vertexShader: shader.vertexShader,
+          fragmentShader: shader.fragmentShader
+
+        });
+
+
+    mesh = new THREE.Mesh( geometry, materiala);
+    mesh.scale.x = mesh.scale.y = mesh.scale.z = 0.9;
+    mesh.flipSided = true;
+    mesh.matrixAutoUpdate = false;
+    mesh.updateMatrix();
+    scenea.add(mesh);
+
 	//
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	//
@@ -94,4 +164,5 @@ function render() {
 	}
 	renderer.clear();
 	renderer.render(scene, camera);
+	renderer.render(scenea, camera);
 }
