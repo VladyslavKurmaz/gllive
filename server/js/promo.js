@@ -56,8 +56,8 @@ var Shaders = {
       fragmentShader: [
         'varying vec3 vNormal;',
         'void main() {',
-          'float intensity = pow( 0.8 - dot( vNormal, vec3( 0, 0, 1.0 ) ), 8.0 );',
-          'gl_FragColor = vec4( 1.0, 1.0, 1.0, 1.0 ) * intensity;',
+          'float intensity = pow( 0.8 - dot( vNormal, vec3( 0, -0.05, 1.0 ) ), 8.0 );',
+          'gl_FragColor = vec4( 1.0, 1.0, 1.0, 0.7 ) * intensity;',
         '}'
       ].join('\n')
     }
@@ -83,6 +83,8 @@ function init() {
 	//
 	camera = new THREE.PerspectiveCamera( fov, width / height, near_plane, far_plane );
   camera.position.z = 500;
+  camera.position.y = -20;
+	camera.lookAt( new THREE.Vector3( 0.0, -20.0, 0.0 ) );
   scene.add( camera );
 	//
 	var geometry = new THREE.SphereGeometry( 100, 40, 30 );
@@ -192,7 +194,7 @@ function render() {
 		globe.rotation.z = 0.0;
 	}
 	if ( atmo != null ) {
-		atmo.rotation.y += mult * 0.0003;
+		//atmo.rotation.y += mult * 0.0003;
 	}
 	renderer.clear();
 	renderer.render(scene, camera);
