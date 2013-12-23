@@ -6,6 +6,7 @@ var	camera			=	null;
 var	controls		=	null;
 var globe				= null;
 var atmo				= null;
+var group				= null;
 
 var play				= 1;
 var width				=	0;
@@ -17,11 +18,14 @@ var far_plane		=	1000;
 var last_time		=	0;
 var tex_name		= 'img/world.jpg';
 
+var earth_radius= 1.0;
+var glow_scale	= 1.1;
 
 var Shaders = {
     'earth' : {
       uniforms: {
-        'texture': { type: 't', value: null }
+        'diff': { type: 't', value: null },
+        'decal': { type: 't', value: null }
       },
       vertexShader: [
         'varying vec3 vNormal;',
@@ -33,11 +37,12 @@ var Shaders = {
         '}'
       ].join('\n'),
       fragmentShader: [
-        'uniform sampler2D texture;',
+        'uniform sampler2D diff;',
+        'uniform sampler2D decal;',
         'varying vec3 vNormal;',
         'varying vec2 vUv;',
         'void main() {',
-          'vec3 diffuse = texture2D( texture, vUv ).xyz;',
+          'vec3 diffuse = texture2D( diff, vUv ).xyz;',
           'float intensity = 1.05 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) );',
           'vec3 atmosphere = vec3( 1.0, 1.0, 1.0 ) * pow( intensity, 3.0 );',
           'gl_FragColor = vec4( diffuse + atmosphere, 1.0 );',
@@ -82,60 +87,37 @@ function init() {
 	scene = new THREE.Scene();
 	//
 	camera = new THREE.PerspectiveCamera( fov, width / height, near_plane, far_plane );
-  camera.position.z = 500;
-  camera.position.y = -20;
-	camera.lookAt( new THREE.Vector3( 0.0, -20.0, 0.0 ) );
+  camera.position.z = 5.0 * earth_radius;
+  camera.position.y = -earth_radius/5.0;
+	camera.lookAt( new THREE.Vector3( 0.0, -earth_radius/5.0, 0.0 ) );
   scene.add( camera );
 	//
-	var geometry = new THREE.SphereGeometry( 100, 40, 30 );
+	var geometry = new THREE.SphereGeometry( earth_radius, 40, 30 );
 
-	var shader = Shaders['earth'];
-	var uniforms = THREE.UniformsUtils.clone( shader.uniforms );
-	uniforms['texture'].value = THREE.ImageUtils.loadTexture( tex_name, new THREE.UVMapping() );
-	//
-	var material = new THREE.ShaderMaterial({
-		transparency:true,
-		uniforms: uniforms,
-		vertexShader: shader.vertexShader,
-		fragmentShader: shader.fragmentShader
-	});
+	var tex1 = THREE.ImageUtils.loadTexture( tex_name, new THREE.UVMapping(), function() {
+		var tex2 = THREE.ImageUtils.loadTexture( 'img/checker.gif', new THREE.UVMapping(), function() {
 
-	$("img[id='progress']").css("visibility", "hidden");
-/*
-	var material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( tex_name, new THREE.UVMapping() ), overdraw: true } );
-	var material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( tex_name, new THREE.UVMapping(), function()
-		{
-			mesh = new THREE.Mesh( geometry, material );
-			scene.add( mesh );
+			group = new THREE.Object3D();
+	
+			var shader = Shaders['earth'];
+			var uniforms = THREE.UniformsUtils.clone( shader.uniforms );
+			uniforms['diff'].value = tex1;
+			uniforms['decal'].value = tex2;
 			//
-			$("img[id='progress']").css("visibility", "hidden");
+			var material = new THREE.ShaderMaterial({
+			transparency:true,
+			uniforms: uniforms,
+			vertexShader: shader.vertexShader,
+			fragmentShader: shader.fragmentShader});
+			var mesh = new THREE.Mesh( geometry, material );
+			mesh.rotation.y = Math.PI;
+			globe = mesh;
+			group.add( mesh );
 			//
-			animate();
-		} ), overdraw: true } );
-*/
-
-	var mesh = new THREE.Mesh( geometry, material );
-	globe = mesh;
-	//mesh.matrixAutoUpdate = false;
-	scene.add( mesh );
-
-/*
-	material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( tex_name, new THREE.UVMapping(), function()
-		{
-			mesh = new THREE.Mesh( geometry, material );
-			scene.add( mesh );
-			//
-			$("img[id='progress']").css("visibility", "hidden");
-			//
-			animate();
-		} ), overdraw: true } );
-	//
-*/
-	var shader = Shaders['atmosphere'];
-  var uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+			var shader = Shaders['atmosphere'];
+  		var uniforms = THREE.UniformsUtils.clone(shader.uniforms);
       
-	var geometry = new THREE.SphereGeometry( 100, 40, 30 );
-  var materiala = new THREE.ShaderMaterial({
+  		var materiala = new THREE.ShaderMaterial({
           uniforms: uniforms,
           vertexShader: shader.vertexShader,
           fragmentShader: shader.fragmentShader,
@@ -143,13 +125,40 @@ function init() {
           blending: THREE.AdditiveBlending,
           transparent: true
         });
-	var mesh = new THREE.Mesh( geometry, materiala );
-	mesh.scale.set( 1.1, 1.1, 1.1 );
-	atmo = mesh;
+			var mesh = new THREE.Mesh( geometry, materiala );
+			mesh.scale.set( glow_scale, glow_scale, glow_scale );
+			atmo = mesh;
 //  mesh.flipSided = true;
 //  mesh.matrixAutoUpdate = false;
 //  mesh.updateMatrix();
-  scene.add(mesh);
+			group.add( mesh );
+		//
+		var lat = 49;//52.5;
+		var lng = 32;//5.75;
+		var size = 5;
+
+ 		var g = new THREE.CubeGeometry(0.0075, 0.0075, 0.01);
+    g.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-0.005));
+
+    var point = new THREE.Mesh( g, new THREE.MeshBasicMaterial( { color: 0xFF0000 } ) );
+
+		var phi = (90 - lat) * Math.PI / 180;
+    var theta = (180 - lng) * Math.PI / 180;
+
+    point.position.x = earth_radius * Math.sin(phi) * Math.cos(theta);
+    point.position.y = earth_radius * Math.cos(phi);
+    point.position.z = earth_radius * Math.sin(phi) * Math.sin(theta);
+
+    point.lookAt(globe.position);
+
+    point.scale.z = Math.max( size, 0.1 ); // avoid non-invertible matrix
+    point.updateMatrix();
+
+			group.add( point );
+			scene.add( group );
+
+		});
+	});
 	//
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	//
@@ -166,6 +175,8 @@ function init() {
 		animate();
 	});
 	animate();
+	//
+	$("img[id='progress']").css("visibility", "hidden");
 }
 
 function resize( event ) {
@@ -188,13 +199,10 @@ function render() {
 	var mult = c_time - last_time;
 	last_time = c_time;
 	//
-	if ( globe != null ) {
-		globe.rotation.x = 23.439281 * Math.PI / 180.0;
-		globe.rotation.y += mult * 0.0003;
-		globe.rotation.z = 0.0;
-	}
-	if ( atmo != null ) {
-		//atmo.rotation.y += mult * 0.0003;
+	if ( group != null ) {
+		group.rotation.x = 23.439281 * Math.PI / 180.0;
+		group.rotation.y += mult * 0.0003;
+		group.rotation.z = 0.0;
 	}
 	renderer.clear();
 	renderer.render(scene, camera);
