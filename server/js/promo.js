@@ -154,9 +154,10 @@ function init() {
     point.scale.z = Math.max( size, 0.1 ); // avoid non-invertible matrix
     point.updateMatrix();
 
-			group.add( point );
-			scene.add( group );
+		group.add( point );
+		scene.add( group );
 
+		$("img[id='progress']").css("visibility", "hidden");
 		});
 	});
 	//
@@ -175,8 +176,6 @@ function init() {
 		animate();
 	});
 	animate();
-	//
-	$("img[id='progress']").css("visibility", "hidden");
 }
 
 function resize( event ) {
@@ -188,10 +187,10 @@ function resize( event ) {
 }
 
 function animate() {
+	render();
 	if ( play ) {
 		requestAnimationFrame( animate );
 	}
-	render();
 }
 
 function render() {
@@ -201,7 +200,7 @@ function render() {
 	//
 	if ( group != null ) {
 		group.rotation.x = 23.439281 * Math.PI / 180.0;
-		group.rotation.y += mult * 0.0003;
+		group.rotation.y += mult * 0.0002;
 		group.rotation.z = 0.0;
 	}
 	renderer.clear();
