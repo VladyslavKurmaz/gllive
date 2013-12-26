@@ -1,4 +1,5 @@
 // globals
+var clock 			= new THREE.Clock();
 var container		=	null;
 var renderer		= null;
 var	scene				=	null;
@@ -15,7 +16,6 @@ var bk_color 		= 0x000000;
 var fov					= 30;
 var near_plane	=	0.1;
 var far_plane		=	1000;
-var last_time		=	0;
 var tex_name		= 'img/world.jpg';
 
 var earth_radius= 1.0;
@@ -77,9 +77,15 @@ function calc_dims() {
 	height = window.innerHeight;
 }
 
+function latlng2sph( lat, lng, r ) {
+	var phi = (90 - lat) * Math.PI / 180;
+	var theta = (180 - lng) * Math.PI / 180;
+	return new THREE.Vector3( r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta) );
+}
+
+
 
 function init() {
-	last_time = Date.now();
 	//
 	container = document.getElementById( 'viewport' );
 	calc_dims();
@@ -137,26 +143,26 @@ function init() {
 		var lng = 32;//5.75;
 		var size = 5;
 
- 		var g = new THREE.CubeGeometry(0.0075, 0.0075, 0.01);
-    g.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-0.005));
+ 		var g = new THREE.CubeGeometry(0.0075, 0.0075, 0.1);
+    g.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-0.05));
 
     var point = new THREE.Mesh( g, new THREE.MeshBasicMaterial( { color: 0xFF0000 } ) );
-
-		var phi = (90 - lat) * Math.PI / 180;
-    var theta = (180 - lng) * Math.PI / 180;
-
-    point.position.x = earth_radius * Math.sin(phi) * Math.cos(theta);
-    point.position.y = earth_radius * Math.cos(phi);
-    point.position.z = earth_radius * Math.sin(phi) * Math.sin(theta);
-
+		point.position = latlng2sph( 49, 32, earth_radius );
     point.lookAt(globe.position);
-
     point.scale.z = Math.max( size, 0.1 ); // avoid non-invertible matrix
     point.updateMatrix();
-
 		group.add( point );
-		scene.add( group );
+		//
+		var lmaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+		var lgeometry = new THREE.Geometry();
+    lgeometry.vertices.push( latlng2sph( 49, 32, 1.1 * earth_radius ) );
+    lgeometry.vertices.push( latlng2sph( 52.5, 5.75, 1.1 * earth_radius ) );
+    lgeometry.vertices.push( latlng2sph( 0, 0, 1.1 * earth_radius ) );
+		var line = new THREE.Line(lgeometry, lmaterial);
+		group.add( line );
 
+		//
+		scene.add( group );
 		$("img[id='progress']").css("visibility", "hidden");
 		});
 	});
@@ -172,7 +178,7 @@ function init() {
 	//
 	$( "#viewport" ).mousedown(function() {
 		play = (play)?(0):(1);
-		last_time = Date.now();
+		clock.getDelta();
 		animate();
 	});
 	animate();
@@ -194,13 +200,11 @@ function animate() {
 }
 
 function render() {
-	var c_time = Date.now();
-	var mult = c_time - last_time;
-	last_time = c_time;
+	var mult = mult = clock.getDelta() / 5.0;
 	//
 	if ( group != null ) {
 		group.rotation.x = 23.439281 * Math.PI / 180.0;
-		group.rotation.y += mult * 0.0002;
+		group.rotation.y += mult;
 		group.rotation.z = 0.0;
 	}
 	renderer.clear();
