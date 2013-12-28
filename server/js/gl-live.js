@@ -93,7 +93,7 @@ function init() {
 	scene = new THREE.Scene();
 	//
 	camera = new THREE.PerspectiveCamera( fov, width / height, near_plane, far_plane );
-  camera.position.z = 5.0 * earth_radius;
+  camera.position.z = 6.0 * earth_radius;
   camera.position.y = -earth_radius/5.0;
 	camera.lookAt( new THREE.Vector3( 0.0, -earth_radius/5.0, 0.0 ) );
   scene.add( camera );
@@ -137,21 +137,26 @@ function init() {
 //  mesh.flipSided = true;
 //  mesh.matrixAutoUpdate = false;
 //  mesh.updateMatrix();
-			group.add( mesh );
+		group.add( mesh );
 		//
-		var lat = 49;//52.5;
-		var lng = 32;//5.75;
-		var size = 5;
 
- 		var g = new THREE.CubeGeometry(0.0075, 0.0075, 0.1);
-    g.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-0.05));
+		var r = $.getJSON( 'gl-live-items.json', function( data ) {
+			for( var i = 0; i < data.location.length; i++ ) {
+				var size = 50;
 
-    var point = new THREE.Mesh( g, new THREE.MeshBasicMaterial( { color: 0xFF0000 } ) );
-		point.position = latlng2sph( 49, 32, earth_radius );
-    point.lookAt(globe.position);
-    point.scale.z = Math.max( size, 0.1 ); // avoid non-invertible matrix
-    point.updateMatrix();
-		group.add( point );
+ 				var g = new THREE.CubeGeometry(0.025, 0.025, 0.01);
+    		g.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-0.005));
+
+    		var point = new THREE.Mesh( g, new THREE.MeshBasicMaterial( { color: 0xFF0000 } ) );
+				point.position = latlng2sph( data.location[i].lat, data.location[i].lng, earth_radius );
+    		point.lookAt(globe.position);
+    		point.scale.z = Math.max( Math.random() * size, 0.1 ); // avoid non-invertible matrix
+    		point.updateMatrix();
+				group.add( point );
+			}
+		} );
+
+
 		//
 		var lmaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
 		var lgeometry = new THREE.Geometry();
@@ -200,10 +205,10 @@ function animate() {
 }
 
 function render() {
-	var mult = mult = clock.getDelta() / 5.0;
+	var mult = mult = clock.getDelta() / 3.0;
 	//
 	if ( group != null ) {
-		group.rotation.x = 23.439281 * Math.PI / 180.0;
+		group.rotation.x = 0.0;//23.439281 * Math.PI / 180.0;
 		group.rotation.y += mult;
 		group.rotation.z = 0.0;
 	}

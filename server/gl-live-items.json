@@ -1,0 +1,155 @@
+{
+	"location":[
+		{
+			"country":"Argentina",
+			"city":"Buenos Aires",
+			"lat":-34.6037232,
+			"lng":-58.3815931
+		},
+		{
+			"country":"Argentina",
+			"city":"Mendoza",
+			"lat":-32.890183,
+			"lng":-68.84404979999999
+		},
+		{
+			"country":"Argentina",
+			"city":"La Plata",
+			"lat":-34.92125,
+			"lng":-57.95433329999999
+		},
+
+		{
+			"country":"Chile",
+			"city":"Santiago",
+			"lat":-33.4691199,
+			"lng":-70.641997
+		},
+
+		{
+			"country":"China",
+			"city":"Beijing",
+			"lat":39.90403,
+			"lng":116.407526
+		},
+
+		{
+			"country":"India",
+			"city":"Noida",
+			"lat":28.5355161,
+			"lng":77.3910265
+		},
+		{
+			"country":"India",
+			"city":"Bangalore",
+			"lat":12.9715987,
+			"lng":77.5945627
+		},
+		{
+			"country":"India",
+			"city":"Nagpur",
+			"lat":21.1458004,
+			"lng":79.0881546
+		},
+		{
+			"country":"India",
+			"city":"Hyderabad",
+			"lat":17.385044,
+			"lng":78.486671
+		},
+		{
+			"country":"India",
+			"city":"Gurgaon",
+			"lat":28.4594965,
+			"lng":77.0266383
+		},
+
+		{
+			"country":"Israel",
+			"city":"Ramat–Gan",
+			"lat":32.068424,
+			"lng":34.824785
+		},
+
+		{
+			"country":"Ukraine",
+			"city":"Kiev",
+			"lat":50.4501,
+			"lng":30.5234
+		},
+		{
+			"country":"Ukraine",
+			"city":"Kharkiv",
+			"lat":49.9935,
+			"lng":36.230383
+		},
+		{
+			"country":"Ukraine",
+			"city":"Lviv",
+			"lat":49.839683,
+			"lng":24.029717
+		},
+		{
+			"country":"Ukraine",
+			"city":"Mykolaiv",
+			"lat":46.975033,
+			"lng":31.994583
+		},
+
+		{
+			"country":"United Kingdom",
+			"city":"London",
+			"lat":51.493301,
+			"lng":-0.226378
+		},
+		{
+			"country":"United Kingdom",
+			"city":"London",
+			"lat":51.524127,
+			"lng":-0.0762235
+		},
+
+		{
+			"country":"United States",
+			"city":"McLean",
+			"lat":38.9338676,
+			"lng":-77.17726039999999
+		},
+		{
+			"country":"United States",
+			"city":"San Jose",
+			"lat":37.3393857,
+			"lng":-121.8949555
+		},
+		{
+			"country":"United States",
+			"city":"Paramus",
+			"lat":40.9445428,
+			"lng":-74.0754189
+		},
+		{
+			"country":"United States",
+			"city":"San Diego",
+			"lat":32.7153292,
+			"lng":-117.1572551
+		},
+		{
+			"country":"United States",
+			"city":"Washington",
+			"lat":38.90723089999999,
+			"lng":-77.0364641
+		},
+		{
+			"country":"United States",
+			"city":"New York",
+			"lat":40.7143528,
+			"lng":-74.00597309999999
+		},
+		{
+			"country":"United States",
+			"city":"San Francisco",
+			"lat":37.7749295,
+			"lng":-122.4194155
+		}
+	]
+}
