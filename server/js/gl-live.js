@@ -8,6 +8,7 @@ var	controls		=	null;
 var globe				= null;
 var atmo				= null;
 var group				= null;
+var points			= [];
 
 var play				= 1;
 var width				=	0;
@@ -17,6 +18,8 @@ var fov					= 30;
 var near_plane	=	0.1;
 var far_plane		=	1000;
 var tex_name		= 'img/world.jpg';
+
+var break_news_slide_timeout = 1000;
 
 var earth_radius= 1.0;
 var glow_scale	= 1.1;
@@ -73,8 +76,36 @@ init();
 animate();
 
 function calc_dims() {
-	width = window.innerWidth;
-	height = window.innerHeight;
+	width = $(window).width();
+	height = $(window).height();
+  $('#break-news-n1').css({
+		position: 'absolute',
+		left: 0,
+		top: 0,
+    width: width / 2,
+    height: height 
+	});
+  $('#break-news-n2').css({
+		position: 'absolute',
+		left: width / 2,
+		top: 0,
+    width: width / 2,
+    height: height / 2 
+	});
+  $('#break-news-n3').css({
+		position: 'absolute',
+		left: width / 2,
+		top: height / 2,
+    width: width / 4,
+    height: height / 2 
+	});
+  $('#break-news-n4').css({
+		position: 'absolute',
+		left: 3 * width / 4,
+		top: height / 2,
+    width: width / 4,
+    height: height / 2 
+	});
 }
 
 function latlng2sph( lat, lng, r ) {
@@ -86,6 +117,18 @@ function latlng2sph( lat, lng, r ) {
 
 
 function init() {
+
+	$('.carousel').carousel({
+  	interval: 10000
+	})
+	$('#carousel-globe').on('slide.bs.carousel', function () {
+		for( var i = 0; i < points.length; i++ ) {
+			points[i].scale.z = Math.random() * 50;
+    	points[i].updateMatrix();
+		}
+		animate();
+	})
+
 	//
 	container = document.getElementById( 'viewport' );
 	calc_dims();
@@ -147,17 +190,19 @@ function init() {
  				var g = new THREE.CubeGeometry(0.025, 0.025, 0.01);
     		g.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-0.005));
 
-    		var point = new THREE.Mesh( g, new THREE.MeshBasicMaterial( { color: 0xFF0000 } ) );
+    		var point = new THREE.Mesh( g, new THREE.MeshBasicMaterial( { color: 0xE46736 } ) );
 				point.position = latlng2sph( data.location[i].lat, data.location[i].lng, earth_radius );
     		point.lookAt(globe.position);
     		point.scale.z = Math.max( Math.random() * size, 0.1 ); // avoid non-invertible matrix
     		point.updateMatrix();
+				points.push( point );
 				group.add( point );
 			}
 		} );
 
 
 		//
+/*
 		var lmaterial = new THREE.LineBasicMaterial( { color: 0x0000ff } );
 		var lgeometry = new THREE.Geometry();
     lgeometry.vertices.push( latlng2sph( 49, 32, 1.1 * earth_radius ) );
@@ -165,7 +210,7 @@ function init() {
     lgeometry.vertices.push( latlng2sph( 0, 0, 1.1 * earth_radius ) );
 		var line = new THREE.Line(lgeometry, lmaterial);
 		group.add( line );
-
+*/
 		//
 		scene.add( group );
 		$("img[id='progress']").css("visibility", "hidden");
@@ -181,8 +226,15 @@ function init() {
 	//
 	window.addEventListener( 'resize', resize, false );
 	//
-	$( "#viewport" ).mousedown(function() {
-		play = (play)?(0):(1);
+	$( window ).mousedown(function() {
+		//play = (play)?(0):(1);
+		$( "#break-news-n1" ).toggle( "slide", { direction: "left" }, break_news_slide_timeout );
+		$( "#break-news-n2" ).toggle( "slide", { direction: "up" }, break_news_slide_timeout );
+		$( "#break-news-n3" ).toggle( "slide", { direction: "down" }, break_news_slide_timeout );
+		$( "#break-news-n4" ).toggle( "slide", { direction: "right" }, break_news_slide_timeout );
+//		$('#break-news-n1').hide("slide", { direction: "left" }, 2000);
+//		$('#break-news-n2').hide("slide", { direction: "right" }, 2000);
+
 		clock.getDelta();
 		animate();
 	});

@@ -33,9 +33,15 @@
 			img {
 				position:absolute;
 			}
+
 			#logo {
 				left:8px;
 				top:8px;
+			}
+			#viewport {
+				margin:0px;
+				border:0px;
+				padding:0px;
 			}
 			#progress {
 				left:0px;
@@ -44,39 +50,59 @@
 			  bottom:0px;
 				margin:auto;
 			}
-			#title {
-				position:absolute;
-				left:0px;
-			  right:0px;
-			  bottom:0px;
-				margin:auto;
-				font-size:72px;
-				text-align:center;
-			}
 			#live {
 				top:0px;
 			  right:0px;
 				width:100px;
 				height:62px;
 			}
-			#live1 {
-				top:0px;
+			.break-news {
+				background-color:#303030;
+			}
+			#carousel-globe {
+				position:absolute;
+				left:0px;
 			  right:0px;
-				width:135px;
-				height:86px;
+			  bottom:0px;
+				margin:auto;
+				color:white;
+				text-align:center;
+				font-size:72px;
 			}
 		</style>
   </head>
   <body>
-		<img id="logo" src="img/gl-logo.png"/>
-		<img id="live" src="img/live-2.png"/>
-		<img id="progress" src="img/loader.gif"/>
-		<div id="viewport">	</div>
- 		<div id="title">Countries</div>  
+		<div id="carousel-globe" class="carousel slide" data-ride="carousel">
+			<div class="carousel-inner">
+      	<div class="item active">
+        	First
+        </div>
+        <div class="item">
+          Second
+        </div>
+        <div class="item">
+          Third
+        </div>
+      </div>
+    </div>
+		<div id="viewport">
+		</div>
+
+		<div><div id="break-news-n1" class="break-news"/><div style="color:white;font-size:48px">twitter</div></div>
+		<div><div id="break-news-n2" class="break-news"/><div style="color:white;font-size:36px">twitter</div></div>
+		<div><div id="break-news-n3" class="break-news"/><div style="color:white;font-size:24px">twitter</div></div>
+		<div><div id="break-news-n4" class="break-news"/><div style="color:white;font-size:24px">twitter</div></div>
+		<div>
+			<img id="logo" src="img/gl-logo.png"/>
+			<img id="live" src="img/live-2.png"/>
+			<img id="progress" src="img/loader.gif"/>
+		</div>
 
   </body>
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="https://code.jquery.com/jquery.js"></script>
+
+	<script src="https://code.jquery.com/jquery.min.js" type="text/javascript"></script>
+	<script src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="js/bootstrap.min.js"></script>
   <script src="js/three.min.js"></script>
