@@ -10,7 +10,6 @@ var group				= null;
 var points			= [];
 
 var prev_time		= null;
-var play				= 1;
 var width				=	0;
 var width				=	0;
 var bk_color 		= 0x000000;
@@ -20,7 +19,7 @@ var far_plane		=	1000;
 var tex_name		= 'img/world.jpg';
 
 var break_news_slide_timeout 	= 1000;
-var globe_carousel_timeout 		= 10000;
+var globe_carousel_timeout 		= 5000;
 var globe_rotation_speed 			= 0.00025;
 
 var earth_radius= 1.0;
@@ -122,19 +121,22 @@ function init() {
 	$('.carousel').carousel({
   	interval: globe_carousel_timeout
 	})
-	$('#carousel-globe').on('slide.bs.carousel', function () {
-		for( var i = 0; i < points.length; i++ ) {
-			points[i].scale.z = Math.random() * 50;
-    	points[i].updateMatrix();
-		}
-	})
 
 	//
 	container = document.getElementById( 'viewport' );
 	calc_dims();
 	//
+	// RENDER
+	renderer = new THREE.WebGLRenderer( { antialias: true } );
+	//
+  renderer.setSize( width, height );
+  renderer.autoClear = false;
+	renderer.setClearColor( bk_color, 1 );
+	container.appendChild( renderer.domElement );
+	//
 	scene = new THREE.Scene();
 	//
+	// CAMERA
 	camera = new THREE.PerspectiveCamera( fov, width / height, near_plane, far_plane );
   camera.position.z = 6.0 * earth_radius;
   camera.position.y = -earth_radius/5.0;
@@ -212,28 +214,38 @@ function init() {
 		group.add( line );
 */
 		//
-		scene.add( group );
-		$("img[id='progress']").css("visibility", "hidden");
+			scene.add( group );
+			//
+			// EVENTS
+			window.addEventListener( 'resize', resize, false );
+			//
+			$( window ).mousedown(function() {
+				toggleBreakNews();
+			});
+			//
+			$('#carousel-globe').on('slide.bs.carousel', function () {
+				for( var i = 0; i < points.length; i++ ) {
+					points[i].scale.z = Math.random() * 50;
+    			points[i].updateMatrix();
+				}
+				toggleBreakNews();
+			});
+			//
+			requestAnimationFrame( animate );
+			//
+			$("div[id='progress-bk']").css("visibility", "hidden");
+			toggleBreakNews();
 		});
 	});
 	//
-	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	//
-  renderer.setSize( width, height );
-  renderer.autoClear = false;
-	renderer.setClearColor( bk_color, 1 );
-	container.appendChild( renderer.domElement );
-	//
-	window.addEventListener( 'resize', resize, false );
-	//
-	$( window ).mousedown(function() {
-		//play = (play)?(0):(1);
-		$( "#break-news-n1" ).toggle( "slide", { direction: "left" }, break_news_slide_timeout );
-		$( "#break-news-n2" ).toggle( "slide", { direction: "up" }, break_news_slide_timeout );
-		$( "#break-news-n3" ).toggle( "slide", { direction: "down" }, break_news_slide_timeout );
-		$( "#break-news-n4" ).toggle( "slide", { direction: "right" }, break_news_slide_timeout );
-	});
-	requestAnimationFrame( animate );
+}
+
+function toggleBreakNews() {
+	$( "#break-news-n1" ).toggle( "slide", { direction: "left" }, break_news_slide_timeout );
+	$( "#break-news-n2" ).toggle( "slide", { direction: "up" }, break_news_slide_timeout );
+	$( "#break-news-n3" ).toggle( "slide", { direction: "down" }, break_news_slide_timeout );
+	$( "#break-news-n4" ).toggle( "slide", { direction: "right" }, break_news_slide_timeout );
 }
 
 function resize( event ) {
@@ -245,9 +257,7 @@ function resize( event ) {
 
 function animate( timestamp ) {
 	render( timestamp );
-	if ( play ) {
-		requestAnimationFrame( animate );
-	}
+	requestAnimationFrame( animate );
 }
 
 function render( timestamp ) {

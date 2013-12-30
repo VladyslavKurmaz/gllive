@@ -50,6 +50,14 @@
 			  bottom:0px;
 				margin:auto;
 			}
+			#progress-bk {
+				position:fixed;
+    		top:0;
+    		bottom:0;
+    		left:0;
+    		right:0;
+    		background:#303030;
+			}
 			#live {
 				top:0px;
 			  right:0px;
@@ -58,6 +66,8 @@
 			}
 			.break-news {
 				background-color:#303030;
+				font-family: "Neue Haas Grotesk";
+				font-size: 17px;
 			}
 			#carousel-globe {
 				position:absolute;
@@ -73,6 +83,8 @@
   </head>
   <body>
 
+		<div id="viewport">
+		</div>
 		<div id="carousel-globe" class="carousel slide" data-ride="carousel">
 			<div class="carousel-inner">
       	<div class="item active">
@@ -86,27 +98,33 @@
         </div>
       </div>
     </div>
-		<div id="viewport">
-		</div>
+
+
+		<!-- twitter + php
+	 	stackoverflow.com/questions/12916539/simplest-php-example-for-retrieving-user-timeline-with-twitter-api-version-1-1/15314662#15314662 -->
 
 		<div id="break-news-n1" class="break-news"/>
-			<div style="color:white;font-size:48px">twitter</div>
+			<div style="color:white;">twitter</div>
 		</div>
 		<div id="break-news-n2" class="break-news"/>
-			<div style="color:white;font-size:36px">twitter</div>
+			<div style="color:white;">Enterprise Social Networking is NOT Social Networking</div>
 		</div>
 		<div id="break-news-n3" class="break-news"/>
-			<div style="color:white;font-size:24px">twitter</div>
+			<div style="color:white;">twitter</div>
 		</div>
 		<div id="break-news-n4" class="break-news"/>
-			<div style="color:white;font-size:24px">twitter</div>
+			<div style="color:white;">twitter</div>
 		</div>
-
+		<!-- loading -->
+		<div id="progress-bk">
+			<img id="progress" src="img/loader.gif"/>
+		</div>
+		<!-- logos -->
 		<div>
 			<img id="logo" src="img/gl-logo.png"/>
 			<img id="live" src="img/live-2.png"/>
-			<img id="progress" src="img/loader.gif"/>
 		</div>
+
 
   </body>
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
