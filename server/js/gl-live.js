@@ -1,5 +1,4 @@
 // globals
-var clock 			= new THREE.Clock();
 var container		=	null;
 var renderer		= null;
 var	scene				=	null;
@@ -10,6 +9,7 @@ var atmo				= null;
 var group				= null;
 var points			= [];
 
+var prev_time		= null;
 var play				= 1;
 var width				=	0;
 var width				=	0;
@@ -19,7 +19,9 @@ var near_plane	=	0.1;
 var far_plane		=	1000;
 var tex_name		= 'img/world.jpg';
 
-var break_news_slide_timeout = 1000;
+var break_news_slide_timeout 	= 1000;
+var globe_carousel_timeout 		= 10000;
+var globe_rotation_speed 			= 0.00025;
 
 var earth_radius= 1.0;
 var glow_scale	= 1.1;
@@ -73,7 +75,6 @@ var Shaders = {
 
 
 init();
-animate();
 
 function calc_dims() {
 	width = $(window).width();
@@ -119,14 +120,13 @@ function latlng2sph( lat, lng, r ) {
 function init() {
 
 	$('.carousel').carousel({
-  	interval: 10000
+  	interval: globe_carousel_timeout
 	})
 	$('#carousel-globe').on('slide.bs.carousel', function () {
 		for( var i = 0; i < points.length; i++ ) {
 			points[i].scale.z = Math.random() * 50;
     	points[i].updateMatrix();
 		}
-		animate();
 	})
 
 	//
@@ -232,13 +232,8 @@ function init() {
 		$( "#break-news-n2" ).toggle( "slide", { direction: "up" }, break_news_slide_timeout );
 		$( "#break-news-n3" ).toggle( "slide", { direction: "down" }, break_news_slide_timeout );
 		$( "#break-news-n4" ).toggle( "slide", { direction: "right" }, break_news_slide_timeout );
-//		$('#break-news-n1').hide("slide", { direction: "left" }, 2000);
-//		$('#break-news-n2').hide("slide", { direction: "right" }, 2000);
-
-		clock.getDelta();
-		animate();
 	});
-	animate();
+	requestAnimationFrame( animate );
 }
 
 function resize( event ) {
@@ -246,22 +241,23 @@ function resize( event ) {
 	camera.aspect = width / height;
 	camera.updateProjectionMatrix();
 	renderer.setSize( width, height );
-	animate();
 }
 
-function animate() {
-	render();
+function animate( timestamp ) {
+	render( timestamp );
 	if ( play ) {
 		requestAnimationFrame( animate );
 	}
 }
 
-function render() {
-	var mult = mult = clock.getDelta() / 3.0;
+function render( timestamp ) {
+  if ( prev_time === null ) prev_time = timestamp;
+	var dt = timestamp - prev_time;
+	prev_time = timestamp;
 	//
 	if ( group != null ) {
 		group.rotation.x = 0.0;//23.439281 * Math.PI / 180.0;
-		group.rotation.y += mult;
+		group.rotation.y += dt * globe_rotation_speed;
 		group.rotation.z = 0.0;
 	}
 	renderer.clear();
