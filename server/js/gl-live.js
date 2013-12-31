@@ -73,6 +73,7 @@ var Shaders = {
   };
 
 
+//calc_dims();
 init();
 
 function calc_dims() {
@@ -117,7 +118,6 @@ function latlng2sph( lat, lng, r ) {
 
 
 function init() {
-
 	$('.carousel').carousel({
   	interval: globe_carousel_timeout
 	})
@@ -126,7 +126,7 @@ function init() {
 	container = document.getElementById( 'viewport' );
 	calc_dims();
 	//
-	toggleBreakNews();
+//	toggleBreakNews();
 	//
 	// RENDER
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -230,7 +230,7 @@ function init() {
 					points[i].scale.z = Math.random() * 50;
     			points[i].updateMatrix();
 				}
-				//toggleBreakNews();
+				toggleBreakNews();
 			});
 			//
 			requestAnimationFrame( animate );

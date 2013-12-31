@@ -68,10 +68,37 @@
 				background-color:#303030;
 			}
 			.break-news-content {
-				padding-top:50px;
+				padding-top:64px;
 				padding-bottom:10px;
 				padding-right:10px;
 				padding-left:10px;
+			}
+			.break-news-content .jumbotron {
+				background-color: #000;
+				color:#f6d50e;
+				color:#f15738;
+			}
+
+			.break-news-content .jumbotron h1 {
+				font-family:"Neue Haas Grotesk";
+				font-weight:bold;
+				color:#a1a1a1;
+			}
+			.break-news-content .jumbotron h2 {
+				font-family:"Neue Haas Grotesk";
+				font-weight:bold;
+				color:#f3a137;
+			}
+			.break-news-content .jumbotron h3 {
+				font-family:"Neue Haas Grotesk";
+				font-weight:bold;
+				color:#777;
+			}
+			.break-news-content img {
+				left:0px;
+			  right:0px;
+			  bottom:64px;
+				margin:auto;
 			}
 
 			#carousel-globe {
@@ -110,18 +137,17 @@
 
 		<div id="break-news-n1" class="break-news"/>
 			<div class="break-news-content">
-				<div class="panel panel-default">
-			  	<div class="panel-body">
-						<div class="page-header">
-  						<h1>Example page header <small>Subtext for header</small></h1>
-						</div>
-  				</div>
+				<div class="jumbotron">
+				  <h1>Apax Partners' Funds to acquire GlobalLogic</h1>
+				  <h2>McLean, VA</h2>
+					<h3>ODSA Topco Limited ("ODSA"), a company backed by Funds advised by Apax Partners ("Apax"), a global private equity firm, and GlobalLogic, a full-lifecycle product development services company, today announced that they have entered into a definitive agreement for ODSA to acquire GlobalLogic...</h3>
 				</div>
+			  <img src="http://s.developers.org.ua/img/announces/420x230_ag420_2.png"></img>
 			</div>
 		</div>
 		<div id="break-news-n2" class="break-news"/>
 			<div class="break-news-content">
-				<div class="panel panel-primary">
+				<div class="panel panel-danger">
 			  	<div class="panel-body">
 						<div class="page-header">
   						<h1>Example page header <small>Subtext for header</small></h1>
@@ -132,6 +158,7 @@
 		</div>
 		<div id="break-news-n3" class="break-news"/>
 			<div class="break-news-content">
+				<div class="pull-right"><img src="img/facebook-64x64-w.png"/></div>
 				<div class="panel panel-default">
 			  	<div class="panel-body">
 						<div class="page-header">
@@ -143,6 +170,7 @@
 		</div>
 		<div id="break-news-n4" class="break-news"/>
 			<div class="break-news-content">
+				<img src="img/twitter-64x64-w.png" class="pull-right"/>
 				<div class="panel panel-default">
 			  	<div class="panel-body">
 						<div class="page-header">
@@ -153,9 +181,9 @@
 			</div>
 		</div>
 		<!-- loading -->
-		<div id="progress-bk">
+		<!--div id="progress-bk">
 			<img id="progress" src="img/loader.gif"/>
-		</div>
+		</div-->
 		<!-- logos -->
 		<div>
 			<img id="logo" src="img/gl-logo.png"/>
