@@ -126,6 +126,8 @@ function init() {
 	container = document.getElementById( 'viewport' );
 	calc_dims();
 	//
+	toggleBreakNews();
+	//
 	// RENDER
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
 	//
@@ -234,7 +236,6 @@ function init() {
 			requestAnimationFrame( animate );
 			//
 			$("div[id='progress-bk']").css("visibility", "hidden");
-			//toggleBreakNews();
 		});
 	});
 	//
