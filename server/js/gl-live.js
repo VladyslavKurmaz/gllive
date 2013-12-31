@@ -228,13 +228,13 @@ function init() {
 					points[i].scale.z = Math.random() * 50;
     			points[i].updateMatrix();
 				}
-				toggleBreakNews();
+				//toggleBreakNews();
 			});
 			//
 			requestAnimationFrame( animate );
 			//
 			$("div[id='progress-bk']").css("visibility", "hidden");
-			toggleBreakNews();
+			//toggleBreakNews();
 		});
 	});
 	//
