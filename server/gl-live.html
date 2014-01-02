@@ -7,10 +7,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>GL world</title>
+    <title>GLLive</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -30,11 +31,9 @@
 				overflow: hidden;
 				background-color:gray;
       }
-			img {
-				position:absolute;
-			}
 
 			#logo {
+				position:absolute;
 				left:8px;
 				top:8px;
 			}
@@ -44,6 +43,7 @@
 				padding:0px;
 			}
 			#progress {
+				position:absolute;
 				left:0px;
 				top:0px;
 			  right:0px;
@@ -59,6 +59,7 @@
     		background:#303030;
 			}
 			#live {
+				position:absolute;
 				top:0px;
 			  right:0px;
 				width:100px;
@@ -94,7 +95,7 @@
 				font-weight:bold;
 				color:#777;
 			}
-			.break-news-content img {
+			.break-news-content #break-news-n1-pic {
 				left:0px;
 			  right:0px;
 			  bottom:64px;
@@ -138,21 +139,20 @@
 		<div id="break-news-n1" class="break-news"/>
 			<div class="break-news-content">
 				<div class="jumbotron">
-				  <h1>Apax Partners' Funds to acquire GlobalLogic</h1>
-				  <h2>McLean, VA</h2>
-					<h3>ODSA Topco Limited ("ODSA"), a company backed by Funds advised by Apax Partners ("Apax"), a global private equity firm, and GlobalLogic, a full-lifecycle product development services company, today announced that they have entered into a definitive agreement for ODSA to acquire GlobalLogic...</h3>
+				  <img src="http://www.globallogic.com/wp-content/themes/globallogic/img/logo.png" style="float:right;width:20%;height:20%;"/>
+				  <h1 id="break-news-n1-title">Apax Partners' Funds to acquire GlobalLogic</h1>
+				  <h2 id="break-news-n1-title-location">McLean, VA<div  id="break-news-n1-timestamp" class="pull-right">october 8, 2013</div></h2>
+					<h3 id="break-news-n1-desc">ODSA Topco Limited ("ODSA"), a company backed by Funds advised by Apax Partners ("Apax"), a global private equity firm, and GlobalLogic, a full-lifecycle product development services company, today announced that they have entered into a definitive agreement for ODSA to acquire GlobalLogic...</h3>
 				</div>
-			  <img src="http://s.developers.org.ua/img/announces/420x230_ag420_2.png"></img>
+			  <!--img id="break-news-n1-pic" src="http://s.developers.org.ua/img/announces/420x230_ag420_2.png"></img-->
 			</div>
 		</div>
 		<div id="break-news-n2" class="break-news"/>
 			<div class="break-news-content">
-				<div class="panel panel-danger">
-			  	<div class="panel-body">
-						<div class="page-header">
-  						<h1>Example page header <small>Subtext for header</small></h1>
-						</div>
-  				</div>
+				<div class="jumbotron">
+				  <h2>Apax Partners' Funds to acquire GlobalLogic</h2>
+				  <h3>McLean, VA</h3>
+					<h4>ODSA Topco Limited ("ODSA"), a company backed by Funds advised by Apax Partners ("Apax"), a global private equity firm, and GlobalLogic, a full-lifecycle product development services company, today announced that they have entered into a definitive agreement for ODSA to acquire GlobalLogic...</h4>
 				</div>
 			</div>
 		</div>
@@ -170,13 +170,8 @@
 		</div>
 		<div id="break-news-n4" class="break-news"/>
 			<div class="break-news-content">
-				<img src="img/twitter-64x64-w.png" class="pull-right"/>
-				<div class="panel panel-default">
-			  	<div class="panel-body">
-						<div class="page-header">
-  						<h1>Example page header <small>Subtext for header</small></h1>
-						</div>
-  				</div>
+				<div>
+				<a id="twitter-widget" class="twitter-timeline" href="https://twitter.com/search?q=%23Globallogic" data-widget-id="418408420543184896">#Globallogic</a>
 				</div>
 			</div>
 		</div>
@@ -198,6 +193,7 @@
 	<script src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="js/bootstrap.min.js"></script>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
   <script src="js/three.min.js"></script>
   <script src="js/gl-live.js"></script>
 </html>

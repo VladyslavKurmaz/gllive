@@ -18,6 +18,7 @@ var near_plane	=	0.1;
 var far_plane		=	1000;
 var tex_name		= 'img/world.jpg';
 
+var break_news_request_timeout 	= 1000;
 var break_news_slide_timeout 	= 1000;
 var globe_carousel_timeout 		= 5000;
 var globe_rotation_speed 			= 0.00025;
@@ -74,6 +75,7 @@ var Shaders = {
 
 
 //calc_dims();
+
 init();
 
 function calc_dims() {
@@ -230,7 +232,7 @@ function init() {
 					points[i].scale.z = Math.random() * 50;
     			points[i].updateMatrix();
 				}
-				toggleBreakNews();
+//				toggleBreakNews();
 			});
 			//
 			requestAnimationFrame( animate );
@@ -274,3 +276,9 @@ function render( timestamp ) {
 	renderer.clear();
 	renderer.render(scene, camera);
 }
+/*
+twitter
+vladyslav.kurmaz@globallogic.com
+a
+GloballogicLive
+*/
