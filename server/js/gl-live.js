@@ -8,6 +8,7 @@ var globe				= null;
 var atmo				= null;
 var group				= null;
 var points			= [];
+var stats				= [];
 
 var prev_time		= null;
 var width				=	0;
@@ -17,11 +18,18 @@ var fov					= 30;
 var near_plane	=	0.1;
 var far_plane		=	1000;
 var tex_name		= 'img/world.jpg';
+var	swapTimerId	= null;
 
-var break_news_request_timeout 	= 1000;
+var swap_timeout							= 30 * 1000;
 var break_news_slide_timeout 	= 1000;
-var globe_carousel_timeout 		= 5000;
+var carousel_timeout 					= 5000;
 var globe_rotation_speed 			= 0.00025;
+
+var point_size								= 0.015;
+var point_min_height					= 0.01;
+var point_max_height					= 50;
+var	point_color								=	0xE46736;//0xf3a137;//0xf6d50e;//0xf15738;
+
 
 var earth_radius= 1.0;
 var glow_scale	= 1.1;
@@ -120,15 +128,12 @@ function latlng2sph( lat, lng, r ) {
 
 
 function init() {
-	$('.carousel').carousel({
-  	interval: globe_carousel_timeout
-	})
-
 	//
 	container = document.getElementById( 'viewport' );
 	calc_dims();
 	//
-//	toggleBreakNews();
+	toggleBreakNews();
+	//swapTimerId = setInterval( function() { toggleBreakNews(); }, swap_timeout );
 	//
 	// RENDER
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -183,28 +188,41 @@ function init() {
 			var mesh = new THREE.Mesh( geometry, materiala );
 			mesh.scale.set( glow_scale, glow_scale, glow_scale );
 			atmo = mesh;
-//  mesh.flipSided = true;
-//  mesh.matrixAutoUpdate = false;
-//  mesh.updateMatrix();
-		group.add( mesh );
-		//
-
-		var r = $.getJSON( 'gl-live-items.json', function( data ) {
-			for( var i = 0; i < data.location.length; i++ ) {
-				var size = 50;
-
- 				var g = new THREE.CubeGeometry(0.025, 0.025, 0.01);
-    		g.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-0.005));
-
-    		var point = new THREE.Mesh( g, new THREE.MeshBasicMaterial( { color: 0xE46736 } ) );
-				point.position = latlng2sph( data.location[i].lat, data.location[i].lng, earth_radius );
-    		point.lookAt(globe.position);
-    		point.scale.z = Math.max( Math.random() * size, 0.1 ); // avoid non-invertible matrix
-    		point.updateMatrix();
-				points.push( point );
-				group.add( point );
-			}
-		} );
+//  	mesh.flipSided = true;
+//  	mesh.matrixAutoUpdate = false;
+//  	mesh.updateMatrix();
+			group.add( mesh );
+			//
+			$.getJSON( 'gl-live-items.json', function( data ) {
+				for( var i = 0; i < data.location.length; i++ ) {
+ 					//var g = new THREE.CubeGeometry(point_size, point_size, point_min_height);
+					//var mtx = new THREE.Matrix4().makeTranslation( 0,0,-point_min_height/2 );
+	 				var g = new THREE.CylinderGeometry(point_size, point_size, point_min_height);
+					var mtx = new THREE.Matrix4().makeRotationX( Math.PI/2 );
+					mtx.setPosition( new THREE.Vector3( 0,0,-point_min_height/2 ) );
+					//
+	    		g.applyMatrix( mtx );
+					//
+    			var point = new THREE.Mesh( g, new THREE.MeshBasicMaterial( { transparent: false, opacity: 0.75, color: point_color } ) );
+					point.position = latlng2sph( data.location[i].lat, data.location[i].lng, earth_radius );
+    			point.lookAt(globe.position);
+	    		point.updateMatrix();
+					points.push( point );
+					group.add( point );
+				}
+				//
+				$.getJSON( 'gl-live-stat.json', function( data ) {
+					stats = data;
+					for( var i = 0; i < stats.stat.length; i++ ) {
+						var a ='';
+						if ( !i ) {
+							a = ' active';
+						}
+						$('.carousel-inner').append('<div class="item'+a+'">'+stats.stat[i].title+'</div>');
+					}
+					$('.carousel').carousel( { interval: carousel_timeout } );
+				} );
+			} );
 
 
 		//
@@ -228,12 +246,19 @@ function init() {
 			});
 			//
 			$('#carousel-globe').on('slide.bs.carousel', function () {
+				var index = $('#carousel-globe .active').index('#carousel-globe .item');
+				//alert( index );
 				for( var i = 0; i < points.length; i++ ) {
-					points[i].scale.z = Math.random() * 50;
+    			points[i].scale.z = Math.max( Math.random() * point_max_height, point_min_height );
     			points[i].updateMatrix();
 				}
-//				toggleBreakNews();
 			});
+
+			$('#carousel-globe').on('slid.bs.carousel', function () {
+				var index = $('#carousel-globe .active').index('#carousel-globe .item');
+				//alert( index );
+			})
+
 			//
 			requestAnimationFrame( animate );
 			//
