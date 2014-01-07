@@ -60,37 +60,38 @@
 			}
 			#live {
 				position:absolute;
-				top:0px;
-			  right:0px;
+				top:-8px;
+			  right:-4px;
 				width:100px;
 				height:62px;
 			}
 			.break-news {
 				background-color:#303030;
 			}
+
 			.break-news-content {
-				padding-top:64px;
-				padding-bottom:10px;
-				padding-right:10px;
 				padding-left:10px;
+				padding-top:48px;
+				padding-right:10px;
+				padding-bottom:0px;
 			}
 			.break-news-content .jumbotron {
 				background-color: #000;
-				color:#f6d50e;
 				color:#f15738;
+				color:#f6d50e;
 			}
-
-			.break-news-content .jumbotron h1 {
+			.break-news-content .jumbotron .break-news-cap {
 				font-family:"Neue Haas Grotesk";
 				font-weight:bold;
+				color:#777;
 				color:#a1a1a1;
 			}
-			.break-news-content .jumbotron h2 {
+			.break-news-content .jumbotron .break-news-location {
 				font-family:"Neue Haas Grotesk";
 				font-weight:bold;
 				color:#f3a137;
 			}
-			.break-news-content .jumbotron h3 {
+			.break-news-content .jumbotron .break-news-desc {
 				font-family:"Neue Haas Grotesk";
 				font-weight:bold;
 				color:#777;
@@ -100,6 +101,11 @@
 			  right:0px;
 			  bottom:64px;
 				margin:auto;
+			}
+			.panel-feed {
+				background:#303030;
+				border-color:#444;
+				color:#cfcfcf;
 			}
 
 			#carousel-globe {
@@ -133,45 +139,46 @@
     </div>
 
 
+			  <!--img id="break-news-n1-pic" src="http://s.developers.org.ua/img/announces/420x230_ag420_2.png"></img-->
+				  <!--img src="http://www.globallogic.com/wp-content/themes/globallogic/img/logo.png" style="float:right;width:20%;height:20%;"/-->
+
 		<!-- twitter + php
 	 	stackoverflow.com/questions/12916539/simplest-php-example-for-retrieving-user-timeline-with-twitter-api-version-1-1/15314662#15314662 -->
+				<!--a id="twitter-widget" class="twitter-timeline" href="https://twitter.com/search?q=%23Globallogic" data-widget-id="418408420543184896">#Globallogic</a-->
 
 		<div id="break-news-n1" class="break-news"/>
 			<div class="break-news-content">
 				<div class="jumbotron">
-				  <img src="http://www.globallogic.com/wp-content/themes/globallogic/img/logo.png" style="float:right;width:20%;height:20%;"/>
-				  <h1 id="break-news-n1-title">Apax Partners' Funds to acquire GlobalLogic</h1>
-				  <h2 id="break-news-n1-title-location">McLean, VA<div  id="break-news-n1-timestamp" class="pull-right">october 8, 2013</div></h2>
-					<h3 id="break-news-n1-desc">ODSA Topco Limited ("ODSA"), a company backed by Funds advised by Apax Partners ("Apax"), a global private equity firm, and GlobalLogic, a full-lifecycle product development services company, today announced that they have entered into a definitive agreement for ODSA to acquire GlobalLogic...</h3>
+				  <h1 id="break-news-n1-title" class="break-news-cap">Apax Partners' Funds to acquire GlobalLogic</h1>
+				  <h2 id="break-news-n1-title-location" class="break-news-location">McLean, VA<div  id="break-news-n1-timestamp" class="pull-right">october 8, 2013</div></h2>
+					<h3 id="break-news-n1-desc" class="break-news-desc">ODSA Topco Limited ("ODSA"), a company backed by Funds advised by Apax Partners ("Apax"), a global private equity firm, and GlobalLogic, a full-lifecycle product development services company, today announced that they have entered into a definitive agreement for ODSA to acquire GlobalLogic...</h3>
 				</div>
-			  <!--img id="break-news-n1-pic" src="http://s.developers.org.ua/img/announces/420x230_ag420_2.png"></img-->
 			</div>
 		</div>
 		<div id="break-news-n2" class="break-news"/>
 			<div class="break-news-content">
 				<div class="jumbotron">
-				  <h2>Apax Partners' Funds to acquire GlobalLogic</h2>
-				  <h3>McLean, VA</h3>
-					<h4>ODSA Topco Limited ("ODSA"), a company backed by Funds advised by Apax Partners ("Apax"), a global private equity firm, and GlobalLogic, a full-lifecycle product development services company, today announced that they have entered into a definitive agreement for ODSA to acquire GlobalLogic...</h4>
+				  <h2 id="break-news-n2-title" class="break-news-cap">Welcome to IT Club Mykolaiv</h2>
+				  <h3 id="break-news-n2-title-location" class="break-news-location">Mykolaiv, UA<div  id="break-news-n2-timestamp" class="pull-right">december 23, 2013</div></h3>
+					<h4 id="break-news-n2-desc" class="break-news-desc">Механізм SEO. Покрокове просування сайту (Олександра Марко), Pragmatic SCRUM (Костянтин Мірін)</h4>
 				</div>
 			</div>
 		</div>
 		<div id="break-news-n3" class="break-news"/>
 			<div class="break-news-content">
-				<div class="pull-right"><img src="img/facebook-64x64-w.png"/></div>
-				<div class="panel panel-default">
+				<div class="panel panel-default panel-feed">
 			  	<div class="panel-body">
-						<div class="page-header">
-  						<h1>Example page header <small>Subtext for header</small></h1>
-						</div>
+						<img class="pull-right" src="img/facebook.png"></img>
   				</div>
 				</div>
 			</div>
 		</div>
 		<div id="break-news-n4" class="break-news"/>
 			<div class="break-news-content">
-				<div>
-				<a id="twitter-widget" class="twitter-timeline" href="https://twitter.com/search?q=%23Globallogic" data-widget-id="418408420543184896">#Globallogic</a>
+				<div class="panel panel-default panel-feed">
+					<div class="panel-heading" style="background:#303030;border-color:#444;color:#cfcfcf;">#Globallogic<img class="pull-right" src="img/twitter.png"></img></div>
+			  	<div class="panel-body">
+  				</div>
 				</div>
 			</div>
 		</div>
