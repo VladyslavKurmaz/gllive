@@ -1,3 +1,10 @@
+// TODO
+// define two different timeouts for globe and feed
+// add lines between locations
+// implement facebook and tweeter
+// read news from json file
+// find news sources / parsing
+
 // globals
 var container		=	null;
 var renderer		= null;
@@ -8,6 +15,8 @@ var globe				= null;
 var atmo				= null;
 var group				= null;
 var points			= [];
+var prev_values	= [];
+var next_values	= [];
 var stats				= [];
 
 var prev_time		= null;
@@ -19,11 +28,14 @@ var near_plane	=	0.1;
 var far_plane		=	1000;
 var tex_name		= 'img/world.jpg';
 var	swapTimerId	= null;
+var points_slide= 0;
 
-var swap_timeout							= 30 * 1000;
+var swap_timeout							= 1 * 60 * 1000;
 var break_news_slide_timeout 	= 1000;
 var carousel_timeout 					= 5000;
 var globe_rotation_speed 			= 0.00025;
+var points_slide_timeout			= 500;
+
 
 var point_size								= 0.015;
 var point_min_height					= 0.01;
@@ -133,7 +145,7 @@ function init() {
 	calc_dims();
 	//
 	toggleBreakNews();
-	//swapTimerId = setInterval( function() { toggleBreakNews(); }, swap_timeout );
+	swapTimerId = setInterval( function() { toggleBreakNews(); }, swap_timeout );
 	//
 	// RENDER
 	renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -194,7 +206,11 @@ function init() {
 			group.add( mesh );
 			//
 			$.getJSON( 'gl-live-items.json', function( data ) {
+				prev_values = new Array( data.location.length );
+				next_values = new Array( data.location.length );
 				for( var i = 0; i < data.location.length; i++ ) {
+					prev_values[i] = 0.0;
+					next_values[i] = 0.0;
  					//var g = new THREE.CubeGeometry(point_size, point_size, point_min_height);
 					//var mtx = new THREE.Matrix4().makeTranslation( 0,0,-point_min_height/2 );
 	 				var g = new THREE.CylinderGeometry(point_size, point_size, point_min_height);
@@ -212,16 +228,46 @@ function init() {
 				}
 				//
 				$.getJSON( 'gl-live-stat.json', function( data ) {
-					stats = data;
-					for( var i = 0; i < stats.stat.length; i++ ) {
-						var a ='';
-						if ( !i ) {
-							a = ' active';
+						stats = data;
+						for( var i = 0; i < stats.stat.length; i++ ) {
+							// normalize data
+							var mi = stats.stat[i].data[0];
+							var ma = stats.stat[i].data[0];
+    					var c = stats.stat[i].data.length; 
+							while (c--) {
+								if ( mi > stats.stat[i].data[c] ) {
+									mi = stats.stat[i].data[c];
+								}
+								if ( ma < stats.stat[i].data[c] ) {
+									ma = stats.stat[i].data[c];
+								}
+							}
+							//
+  	  				c = stats.stat[i].data.length; 
+							if ( mi == ma ) {
+								while (c--){
+				 					stats.stat[i].data[c] = mi;
+								}
+							} else {
+								while (c--){
+				 					stats.stat[i].data[c] = ( stats.stat[i].data[c] - mi ) / ( ma - mi);
+								}
+							}
+  	  				c = stats.stat[i].data.length; 
+							while (c--) {
+								stats.stat[i].data[c] = Math.max( stats.stat[i].data[c] * point_max_height, point_min_height );
+							}
+							//
+							var a ='';
+							if ( !i ) {
+								a = ' active';
+							}
+							$('.carousel-inner').append('<div class="item'+a+'">'+stats.stat[i].title+'</div>');
 						}
-						$('.carousel-inner').append('<div class="item'+a+'">'+stats.stat[i].title+'</div>');
-					}
-					$('.carousel').carousel( { interval: carousel_timeout } );
-				} );
+						$('.carousel').carousel( { interval: carousel_timeout } );
+						// start points sliding
+						slidePoints( 0 );
+				});
 			} );
 
 
@@ -247,16 +293,15 @@ function init() {
 			//
 			$('#carousel-globe').on('slide.bs.carousel', function () {
 				var index = $('#carousel-globe .active').index('#carousel-globe .item');
-				//alert( index );
 				for( var i = 0; i < points.length; i++ ) {
-    			points[i].scale.z = Math.max( Math.random() * point_max_height, point_min_height );
-    			points[i].updateMatrix();
+					prev_values[i] = points[i].scale.z;
 				}
 			});
 
 			$('#carousel-globe').on('slid.bs.carousel', function () {
 				var index = $('#carousel-globe .active').index('#carousel-globe .item');
 				//alert( index );
+				slidePoints( index );
 			})
 
 			//
@@ -267,6 +312,14 @@ function init() {
 	});
 	//
 	//
+}
+
+function slidePoints( n ) {
+	for( var i = 0; i < stats.stat[n].data.length; i++ ) {
+		next_values[i] = stats.stat[n].data[i];
+	}
+	points_slide = points_slide_timeout;
+
 }
 
 function toggleBreakNews() {
@@ -292,6 +345,20 @@ function render( timestamp ) {
   if ( prev_time === null ) prev_time = timestamp;
 	var dt = timestamp - prev_time;
 	prev_time = timestamp;
+	// slide points
+	if ( points_slide > 0 ) {
+		points_slide -= dt;
+		if ( points_slide < 0 ) {
+			points_slide = 0;
+		}
+		//
+		for( var i = 0; i < points.length; i++ ) {
+			var v = prev_values[i] + ( next_values[i] - prev_values[i] ) * ( points_slide_timeout - points_slide ) / points_slide_timeout;
+ 			points[i].scale.z = v;
+ 			points[i].updateMatrix();
+		}
+	}
+	
 	//
 	if ( group != null ) {
 		group.rotation.x = 0.0;//23.439281 * Math.PI / 180.0;
