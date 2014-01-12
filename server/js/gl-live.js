@@ -4,6 +4,7 @@
 // implement facebook and tweeter
 // read news from json file
 // find news sources / parsing
+// add color gradient to the bars
 
 // globals
 var container		=	null;
