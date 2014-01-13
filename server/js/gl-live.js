@@ -5,6 +5,7 @@
 // read news from json file
 // find news sources / parsing
 // add color gradient to the bars
+// change casousel direction
 
 // globals
 var container		=	null;
