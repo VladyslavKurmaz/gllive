@@ -38,6 +38,7 @@ var carousel_timeout 					= 5000;
 var globe_rotation_speed 			= 0.00025;
 var points_slide_timeout			= 500;
 
+var news_border								= 80;
 
 var point_size								= 0.015;
 var point_min_height					= 0.01;
@@ -110,13 +111,21 @@ function calc_dims() {
     width: width / 2,
     height: height 
 	});
+  $('#break-news-n1 .break-news-content .jumbotron').css({
+    height: height - news_border
+	});
+
   $('#break-news-n2').css({
 		position: 'absolute',
 		left: width / 2,
 		top: 0,
     width: width / 2,
-    height: height / 2 
+    height: height / 2
 	});
+  $('#break-news-n2 .break-news-content .jumbotron').css({
+    height: height / 2 - news_border
+	});
+
   $('#break-news-n3').css({
 		position: 'absolute',
 		left: width / 2,
@@ -124,6 +133,10 @@ function calc_dims() {
     width: width / 4,
     height: height / 2 
 	});
+  $('#break-news-n3 .break-news-content .panel').css({
+    height: height / 2 - news_border
+	});
+
   $('#break-news-n4').css({
 		position: 'absolute',
 		left: 3 * width / 4,
@@ -131,6 +144,10 @@ function calc_dims() {
     width: width / 4,
     height: height / 2 
 	});
+  $('#break-news-n4 .break-news-content .panel').css({
+    height: height / 2 - news_border
+	});
+
 }
 
 function latlng2sph( lat, lng, r ) {
