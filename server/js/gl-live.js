@@ -38,7 +38,7 @@ var carousel_timeout 					= 5000;
 var globe_rotation_speed 			= 0.00025;
 var points_slide_timeout			= 500;
 
-var news_border								= 80;
+var news_offset								= 30;
 
 var point_size								= 0.015;
 var point_min_height					= 0.01;
@@ -98,12 +98,17 @@ var Shaders = {
 
 
 //calc_dims();
+//window.addEventListener( 'resize', resize, false );
 
 init();
 
 function calc_dims() {
 	width = $(window).width();
 	height = $(window).height();
+	//
+	var magic_size = 14 * height / 707; 
+  $('body').css('font-size', magic_size + 'px');
+	//
   $('#break-news-n1').css({
 		position: 'absolute',
 		left: 0,
@@ -111,10 +116,13 @@ function calc_dims() {
     width: width / 2,
     height: height 
 	});
-  $('#break-news-n1 .break-news-content .jumbotron').css({
-    height: height - news_border
+
+
+  $('#break-news-n1 .break-news-content').css({
+    height: height - 2 * 32
 	});
 
+/*
   $('#break-news-n2').css({
 		position: 'absolute',
 		left: width / 2,
@@ -123,7 +131,7 @@ function calc_dims() {
     height: height / 2
 	});
   $('#break-news-n2 .break-news-content .jumbotron').css({
-    height: height / 2 - news_border
+    height: height / 2 - news_offset
 	});
 
   $('#break-news-n3').css({
@@ -134,7 +142,7 @@ function calc_dims() {
     height: height / 2 
 	});
   $('#break-news-n3 .break-news-content .panel').css({
-    height: height / 2 - news_border
+    height: height / 2 - news_offset
 	});
 
   $('#break-news-n4').css({
@@ -145,9 +153,9 @@ function calc_dims() {
     height: height / 2 
 	});
   $('#break-news-n4 .break-news-content .panel').css({
-    height: height / 2 - news_border
+    height: height / 2 - news_offset
 	});
-
+*/
 }
 
 function latlng2sph( lat, lng, r ) {
