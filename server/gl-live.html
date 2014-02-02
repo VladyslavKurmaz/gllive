@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>GLLive</title>
+    <title>GL live</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -29,97 +29,49 @@
         margin:0px;
         padding:0px;
 				overflow: hidden;
-				background-color:gray;
-      }
-
-			#logo {
-				position:absolute;
-				left:8px;
-				top:8px;
-			}
-			#viewport {
-				margin:0px;
-				border:0px;
-				padding:0px;
-			}
-			#progress {
-				position:absolute;
-				left:0px;
-				top:0px;
-			  right:0px;
-			  bottom:0px;
-				margin:auto;
-			}
-			#progress-bk {
-				position:fixed;
-    		top:0;
-    		bottom:0;
-    		left:0;
-    		right:0;
-    		background:#303030;
-			}
-			#live {
-				position:absolute;
-				top:-8px;
-			  right:-4px;
-				width:100px;
-				height:62px;
-			}
-			.break-news {
 				background-color:#303030;
 				font-family:"Neue Haas Grotesk";
 				font-weight:bold;
+      }
+      .news-panel {
+				position: absolute;
+				background-color:#303030;
+      }
+			.news-content {
+				padding:10px;
 			}
-			.break-news-panel {
-				padding:8px;
-			}
-			.break-news-content {
-				padding:0px;
+			.news-bk {
 				background-color:black;
 			}
-			.break-news-content .jumbotron {
-				background-color: #000;
-				color:#f15738;
-				color:#f6d50e;
+			.social-bk {
+				background-color:#303030;
 			}
-			.break-news-content .jumbotron .break-news-cap {
+      .news-font {
+				font-family:"Neue Haas Grotesk";
+				font-weight:bold;
+      }
+			.news-title {
+				padding:10px;
+				margin:0px;
 				color:#777;
 				color:#a1a1a1;
 			}
-			.break-news-content .jumbotron .break-news-location {
-				font-family:"Neue Haas Grotesk";
-				font-weight:bold;
+			.news-location {
+				padding-left:10px;
+				padding-right:10px;
 				color:#f3a137;
 			}
-			.break-news-content .jumbotron .break-news-desc {
-				font-family:"Neue Haas Grotesk";
-				font-weight:bold;
+			.news-details {
+				padding-left:10px;
+				padding-right:10px;
 				color:#777;
 			}
-			.break-news-content #break-news-n1-pic {
-				left:0px;
-			  right:0px;
-			  bottom:64px;
-				margin:auto;
-			}
-			.panel-feed {
+			.social-feed {
 				background:#303030;
 				border-color:#444;
 				color:#cfcfcf;
 			}
 
-			#carousel-globe {
-				position:absolute;
-				left:0px;
-			  right:0px;
-			  bottom:0px;
-				margin:auto;
-				color:white;
-				text-align:center;
-				font-family:'Neue Haas Grotesk';
-				font-size:72px;
-				color:#a1a1a1;
-			}
 		</style>
   </head>
   <body>
@@ -131,62 +83,54 @@
       </div>
     </div>
 
+		<div id="news-p1" class="news-panel">
+			<div class="news-content">
+				<div id="news-b1" class="news-bk">
+				  <h1 class="news-title news-font" style="font-size:4em;">Apax Partners' Funds to acquire GlobalLogic</h1>
+				  <h2 class="news-location news-font" style="font-size:1.5em;">McLean, VA<div  id="break-news-n1-timestamp" class="pull-right">october 8, 2013</div></h2>
+					<h3 class="news-details news-font" style="font-size:2em;">ODSA Topco Limited ("ODSA"), a company backed by Funds advised by Apax Partners ("Apax"), a global private equity firm, and GlobalLogic, a full-lifecycle product development services company, today announced that they have entered into a definitive agreement for ODSA to acquire GlobalLogic.</h3>
+					<div style="width:100%;text-align:center;">
+						<img src="http://www.iamwire.com/wp-content/uploads/2013/10/apax-partners-globallogic.jpg"/>
+					</div>
 
-			  <!--img id="break-news-n1-pic" src="http://s.developers.org.ua/img/announces/420x230_ag420_2.png"></img-->
-				  <!--img src="http://www.globallogic.com/wp-content/themes/globallogic/img/logo.png" style="float:right;width:20%;height:20%;"/-->
-
-		<!-- twitter + php
-	 	stackoverflow.com/questions/12916539/simplest-php-example-for-retrieving-user-timeline-with-twitter-api-version-1-1/15314662#15314662 -->
-				<!--a id="twitter-widget" class="twitter-timeline" href="https://twitter.com/search?q=%23Globallogic" data-widget-id="418408420543184896">#Globallogic</a-->
-
-		<div id="break-news-n1" class="break-news"/>
-			<span class="break-news-panel">
-				<div class="break-news-content">
-				  <h1 id="break-news-n1-title" class="break-news-cap">Apax Partners' Funds to acquire GlobalLogic</h1>
-				  <h2 id="break-news-n1-title-location" class="break-news-location">McLean, VA<div  id="break-news-n1-timestamp" class="pull-right">october 8, 2013</div></h2>
-					<h3 id="break-news-n1-desc" class="break-news-desc">ODSA Topco Limited ("ODSA"), a company backed by Funds advised by Apax Partners ("Apax"), a global private equity firm, and GlobalLogic, a full-lifecycle product development services company, today announced that they have entered into a definitive agreement for ODSA to acquire GlobalLogic...</h3>
-				</div>
-			</span>
-		</div>
-		<!--div id="break-news-n2" class="break-news"/>
-			<div class="break-news-content">
-				<div class="jumbotron">
-				  <h2 id="break-news-n2-title" class="break-news-cap">Welcome to IT Club Mykolaiv</h2>
-				  <h3 id="break-news-n2-title-location" class="break-news-location">Mykolaiv, UA<div  id="break-news-n2-timestamp" class="pull-right">december 23, 2013</div></h3>
-					<h4 id="break-news-n2-desc" class="break-news-desc">Механізм SEO. Покрокове просування сайту (Олександра Марко), Pragmatic SCRUM (Костянтин Мірін)</h4>
 				</div>
 			</div>
 		</div>
-		<div id="break-news-n3" class="break-news"/>
-			<div class="break-news-content">
-				<div class="panel panel-default panel-feed">
-			  	<div class="panel-body">
-						<img class="pull-right" src="img/facebook.png"></img>
-  				</div>
+		<div id="news-p2" class="news-panel">
+			<div class="news-content">
+				<div id="news-b2" class="news-bk">
+				  <h1 class="news-title news-font" style="font-size:2.5em;">Welcome to IT Club Mykolaiv</h1>
+				  <h2 class="news-location news-font" style="font-size:1.5em;">Mykolaiv, UA<div  id="break-news-n1-timestamp" class="pull-right">december 23, 2013</div></h2>
+					<h3 class="news-details news-font" style="font-size:2em;">Механізм SEO. Покрокове просування сайту (Олександра Марко), Pragmatic SCRUM (Костянтин Мірін)</h3>
 				</div>
 			</div>
 		</div>
-		<div id="break-news-n4" class="break-news"/>
-			<div class="break-news-content">
-				<div class="panel panel-default panel-feed">
-					<div class="panel-heading" style="background:#303030;border-color:#444;color:#cfcfcf;">#Globallogic<img class="pull-right" src="img/twitter.png"></img></div>
-			  	<div class="panel-body">
-<p><a href="https://twitter.com/intent/tweet?in_reply_to=51113028241989632">Reply</a></p>
-<p><a href="https://twitter.com/intent/retweet?tweet_id=51113028241989632">Retweet</a></p>
-<p><a href="https://twitter.com/intent/favorite?tweet_id=51113028241989632">Favorite</a></p>
-  				</div>
+		<div id="news-p3" class="news-panel">
+			<div class="news-content">
+				<div id="news-b3" class="social-bk">
+					<div style="padding:5px;" >
+						<div id="feed-facebook" class="panel panel-default social-feed">
+				  		<div class="panel-body">
+								<img class="pull-right" src="img/facebook.png"></img>
+  						</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div-->
-		<!-- loading -->
-		<!--div id="progress-bk">
-			<img id="progress" src="img/loader.gif"/>
-		</div-->
-		<!-- logos -->
-		<!--div>
-			<img id="logo" src="img/gl-logo.png"/>
-			<img id="live" src="img/live-2.png"/>
-		</div-->
+		</div>
+		<div id="news-p4" class="news-panel">
+			<div class="news-content">
+				<div id="news-b4" class="social-bk">
+					<div style="padding:5px;" >
+						<div id="feed-twitter" class="panel panel-default social-feed">
+							<div class="panel-heading" style="background:#303030;border-color:#444;color:#cfcfcf;">#Globallogic<img class="pull-right" src="img/twitter.png"></img></div>
+				  		<div class="panel-body">
+ 							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
   </body>
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -195,8 +139,6 @@
 	<script src="//code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="js/bootstrap.min.js"></script>
-	<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-  <script src="js/three.min.js"></script>
   <script src="js/gl-live.js"></script>
 </html>
 
