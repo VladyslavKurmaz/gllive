@@ -1,16 +1,239 @@
+// TODO
+// define two different timeouts for globe and feed
+// add lines between locations
+// implement facebook and tweeter
+// read news from json file
+// find news sources / parsing
+// add color gradient to the bars
+// change casousel direction
 
 
 // configuration constants
-var viewSwapTimeout			= 1 * 60 * 1000;
-var newsSlideTimeout 		= 1000;
-var newsBkPadding				= 10;
-var feedPadding					= 5;
+var viewSwapTimeout				= 1000 * 60;
+var newsUpdateTimeout			= 1000 * 60 * 60;
+var socialsUpdateTimeout	= 1000 * 60 * 30;
+var statsUpdateTimeout		= 1000 * 60 * 60 * 24;
+var carouselTimeout 			= 1000 * 5;
+var pointsSlideTimeout		= 1000 * 0.5;
+var newsSlideTimeout 			= 1000 * 2;
+
+var newsBkPadding					= 10;
+var feedPadding						= 5;
+var globeRotationSpeed 		= 0.00025;
+var globeRadius						= 1.0;
+var globeGlowScale				= 1.1;
 
 
-//calcDims();
-//window.addEventListener( 'resize', resize, false );
+// globals
+var container							=	null;
+var renderer							= null;
+var	scene									=	null;
+var	camera								=	null;
+var	controls							=	null;
+var globe									= null;
+var atmo									= null;
+var group									= null;
+var points								= [];
+var prevValues						= [];
+var nextValues						= [];
+var stats									= [];
+
+var prevTime							= null;
+var width									=	0;
+var height								=	0;
+var bkColor 							= 0x000000;
+var fov										= 30;
+var nearPlane							=	0.1;
+var farPlane							=	1000;
+var texName								= 'img/world.jpg';
+var	swapTimerId						= null;
+var pointsSlideTime				= 0;
+
+var pointSize							= 0.015;
+var pointMinHeight				= 0.01;
+var pointMaxHeight				= 50;
+var	pointColor						=	0xE46736;//0xf3a137;//0xf6d50e;//0xf15738;
+
+var Shaders = {
+    'earth' : {
+      uniforms: {
+        'diff': { type: 't', value: null },
+        'decal': { type: 't', value: null }
+      },
+      vertexShader: [
+        'varying vec3 vNormal;',
+        'varying vec2 vUv;',
+        'void main() {',
+          'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
+          'vNormal = normalize( normalMatrix * normal );',
+          'vUv = uv;',
+        '}'
+      ].join('\n'),
+      fragmentShader: [
+        'uniform sampler2D diff;',
+        'uniform sampler2D decal;',
+        'varying vec3 vNormal;',
+        'varying vec2 vUv;',
+        'void main() {',
+          'vec3 diffuse = texture2D( diff, vUv ).xyz;',
+          'float intensity = 1.05 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) );',
+          'vec3 atmosphere = vec3( 1.0, 1.0, 1.0 ) * pow( intensity, 3.0 );',
+          'gl_FragColor = vec4( diffuse + atmosphere, 1.0 );',
+        '}'
+      ].join('\n')
+    },
+    'atmosphere' : {
+      uniforms: {},
+      vertexShader: [
+        'varying vec3 vNormal;',
+        'void main() {',
+          'vNormal = normalize( normalMatrix * normal );',
+          'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
+        '}'
+      ].join('\n'),
+      fragmentShader: [
+        'varying vec3 vNormal;',
+        'void main() {',
+          'float intensity = pow( 0.8 - dot( vNormal, vec3( 0, -0.05, 1.0 ) ), 8.0 );',
+          'gl_FragColor = vec4( 1.0, 1.0, 1.0, 0.7 ) * intensity;',
+        '}'
+      ].join('\n')
+    }
+  };
 
 init();
+
+function init() {
+	$("div[id='progress-bk']").css("visibility", "hidden");
+
+	container = document.getElementById( 'viewport' );
+	calcDims();
+	//
+	// RENDER
+	renderer = new THREE.WebGLRenderer( { antialias: true } );
+	//
+  renderer.setSize( width, height );
+  renderer.autoClear = false;
+	renderer.setClearColor( bkColor, 1 );
+	container.appendChild( renderer.domElement );
+	//
+	scene = new THREE.Scene();
+	//
+	// CAMERA
+	camera = new THREE.PerspectiveCamera( fov, width / height, nearPlane, farPlane );
+  camera.position.z = 6.0 * globeRadius;
+  camera.position.y = -globeRadius/5.0;
+	camera.lookAt( new THREE.Vector3( 0.0, -globeRadius/5.0, 0.0 ) );
+  scene.add( camera );
+	//
+	var tex1 = THREE.ImageUtils.loadTexture( texName, new THREE.UVMapping(), function() {
+		var tex2 = THREE.ImageUtils.loadTexture( 'img/checker.gif', new THREE.UVMapping(), function() {
+			//
+			var geometry = new THREE.SphereGeometry( globeRadius, 40, 30 );
+			//
+			group = new THREE.Object3D();
+			//
+			var shader = Shaders['earth'];
+			var uniforms = THREE.UniformsUtils.clone( shader.uniforms );
+			uniforms['diff'].value = tex1;
+			uniforms['decal'].value = tex2;
+			//
+			var material = new THREE.ShaderMaterial({
+			transparency:true,
+			uniforms: uniforms,
+			vertexShader: shader.vertexShader,
+			fragmentShader: shader.fragmentShader});
+			var mesh = new THREE.Mesh( geometry, material );
+			mesh.rotation.y = Math.PI;
+			globe = mesh;
+			group.add( mesh );
+			//
+			var shader = Shaders['atmosphere'];
+  		var uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+      
+  		var materiala = new THREE.ShaderMaterial({
+          uniforms: uniforms,
+          vertexShader: shader.vertexShader,
+          fragmentShader: shader.fragmentShader,
+			    side: THREE.BackSide,
+          blending: THREE.AdditiveBlending,
+          transparent: true
+        });
+			var mesh = new THREE.Mesh( geometry, materiala );
+			mesh.scale.set( globeGlowScale, globeGlowScale, globeGlowScale );
+			atmo = mesh;
+			group.add( mesh );
+			//
+			scene.add( group );
+			//
+			//
+			toggleBreakNews();
+			updateNews();
+			updateSocials();
+			updateStats();
+			//
+			//
+			// EVENTS
+			window.addEventListener( 'resize', resize, false );
+			//
+			$( window ).mousedown(function() {
+				slideBreakNews();
+			});
+/*
+			$('#carousel-globe').on('slide.bs.carousel', function () {
+				var index = $('#carousel-globe .active').index('#carousel-globe .item');
+				for( var i = 0; i < points.length; i++ ) {
+					prevValues[i] = points[i].scale.z;
+				}
+			});
+
+			$('#carousel-globe').on('slid.bs.carousel', function () {
+				var index = $('#carousel-globe .active').index('#carousel-globe .item');
+				//alert( index );
+				slidePoints( index );
+			})
+*/
+			//
+			requestAnimationFrame( animate );
+			//
+			$("div[id='progress-bk']").css("visibility", "hidden");
+		});
+	});
+}
+
+
+function toggleBreakNews() {
+	slideBreakNews();
+	setTimeout( toggleBreakNews, viewSwapTimeout );
+}
+
+function slideBreakNews() {
+	$( "#news-p1" ).toggle( "slide", { direction: "left" }, newsSlideTimeout );
+	$( "#news-p2" ).toggle( "slide", { direction: "up" }, newsSlideTimeout );
+	$( "#news-p3" ).toggle( "slide", { direction: "down" }, newsSlideTimeout );
+	$( "#news-p4" ).toggle( "slide", { direction: "right" }, newsSlideTimeout );
+}
+
+function updateNews() {
+	$.getJSON( 'news.php', function( data ) {
+		//alert( JSON.stringify( data ) );
+		setTimeout( updateNews, newsUpdateTimeout );
+	} );
+}
+
+function updateSocials() {
+	$.getJSON( 'socials.php', function( data ) {
+		//alert( JSON.stringify( data ) );
+		setTimeout( updateSocials, socialsUpdateTimeout );
+	} );
+}
+
+function updateStats() {
+	$.getJSON( 'stats.php', function( data ) {
+		//alert( JSON.stringify( data ) );
+		setTimeout( updateStats, statsUpdateTimeout );
+	} );
+}
 
 function calcDims() {
 	width = $(window).width();
@@ -63,32 +286,50 @@ function calcDims() {
 	});
 }
 
-
-function init() {
-	//
-	calcDims();
-	//
-	toggleBreakNews();
-	swapTimerId = setInterval( function() { toggleBreakNews(); }, viewSwapTimeout );
-	//
-	// EVENTS
-	window.addEventListener( 'resize', resize, false );
-	//
-	$( window ).mousedown(function() {
-		toggleBreakNews();
-	});
-}
-
-
-function toggleBreakNews() {
-	$( "#news-p1" ).toggle( "slide", { direction: "left" }, newsSlideTimeout );
-	$( "#news-p2" ).toggle( "slide", { direction: "up" }, newsSlideTimeout );
-	$( "#news-p3" ).toggle( "slide", { direction: "down" }, newsSlideTimeout );
-	$( "#news-p4" ).toggle( "slide", { direction: "right" }, newsSlideTimeout );
+function latlng2sph( lat, lng, r ) {
+	var phi = (90 - lat) * Math.PI / 180;
+	var theta = (180 - lng) * Math.PI / 180;
+	return new THREE.Vector3( r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta) );
 }
 
 function resize( event ) {
 	calcDims();
+	camera.aspect = width / height;
+	camera.updateProjectionMatrix();
+	renderer.setSize( width, height );
+}
+
+function animate( timestamp ) {
+	render( timestamp );
+	requestAnimationFrame( animate );
+}
+
+function render( timestamp ) {
+  if ( prevTime === null ) prevTime = timestamp;
+	var dt = timestamp - prevTime;
+	prevTime = timestamp;
+	// slide points
+	if ( pointsSlideTime > 0 ) {
+		pointsSlideTime -= dt;
+		if ( pointsSlideTime < 0 ) {
+			pointsSlideTime = 0;
+		}
+		//
+		for( var i = 0; i < points.length; i++ ) {
+			var v = prevValues[i] + ( nextValues[i] - prevValues[i] ) * ( newsSlideTimeout - pointsSlideTime ) / newsSlideTimeout;
+ 			points[i].scale.z = v;
+ 			points[i].updateMatrix();
+		}
+	}
+	
+	//
+	if ( group != null ) {
+		group.rotation.x = 0.0;//23.439281 * Math.PI / 180.0;
+		group.rotation.y += dt * globeRotationSpeed;
+		group.rotation.z = 0.0;
+	}
+	renderer.clear();
+	renderer.render(scene, camera);
 }
 
 /*
