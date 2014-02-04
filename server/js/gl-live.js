@@ -28,11 +28,13 @@ var globeGlowScale				= 1.1;
 var container							=	null;
 var renderer							= null;
 var	scene									=	null;
+var sceneDyn							= null;
 var	camera								=	null;
 var	controls							=	null;
 var globe									= null;
 var atmo									= null;
 var group									= null;
+var groupDyn							= null;
 var points								= [];
 var prevValues						= [];
 var nextValues						= [];
@@ -57,8 +59,7 @@ var	pointColor						=	0xE46736;//0xf3a137;//0xf6d50e;//0xf15738;
 var Shaders = {
     'earth' : {
       uniforms: {
-        'diff': { type: 't', value: null },
-        'decal': { type: 't', value: null }
+        'diff': { type: 't', value: null }
       },
       vertexShader: [
         'varying vec3 vNormal;',
@@ -71,7 +72,6 @@ var Shaders = {
       ].join('\n'),
       fragmentShader: [
         'uniform sampler2D diff;',
-        'uniform sampler2D decal;',
         'varying vec3 vNormal;',
         'varying vec2 vUv;',
         'void main() {',
@@ -104,8 +104,6 @@ var Shaders = {
 init();
 
 function init() {
-	$("div[id='progress-bk']").css("visibility", "hidden");
-
 	container = document.getElementById( 'viewport' );
 	calcDims();
 	//
@@ -127,77 +125,73 @@ function init() {
   scene.add( camera );
 	//
 	var tex1 = THREE.ImageUtils.loadTexture( texName, new THREE.UVMapping(), function() {
-		var tex2 = THREE.ImageUtils.loadTexture( 'img/checker.gif', new THREE.UVMapping(), function() {
-			//
-			var geometry = new THREE.SphereGeometry( globeRadius, 40, 30 );
-			//
-			group = new THREE.Object3D();
-			//
-			var shader = Shaders['earth'];
-			var uniforms = THREE.UniformsUtils.clone( shader.uniforms );
-			uniforms['diff'].value = tex1;
-			uniforms['decal'].value = tex2;
-			//
-			var material = new THREE.ShaderMaterial({
-			transparency:true,
-			uniforms: uniforms,
-			vertexShader: shader.vertexShader,
-			fragmentShader: shader.fragmentShader});
-			var mesh = new THREE.Mesh( geometry, material );
-			mesh.rotation.y = Math.PI;
-			globe = mesh;
-			group.add( mesh );
-			//
-			var shader = Shaders['atmosphere'];
-  		var uniforms = THREE.UniformsUtils.clone(shader.uniforms);
-      
-  		var materiala = new THREE.ShaderMaterial({
-          uniforms: uniforms,
-          vertexShader: shader.vertexShader,
-          fragmentShader: shader.fragmentShader,
-			    side: THREE.BackSide,
-          blending: THREE.AdditiveBlending,
-          transparent: true
-        });
-			var mesh = new THREE.Mesh( geometry, materiala );
-			mesh.scale.set( globeGlowScale, globeGlowScale, globeGlowScale );
-			atmo = mesh;
-			group.add( mesh );
-			//
-			scene.add( group );
-			//
-			//
-			toggleBreakNews();
-			updateNews();
-			updateSocials();
-			updateStats();
-			//
-			//
-			// EVENTS
-			window.addEventListener( 'resize', resize, false );
-			//
-			$( window ).mousedown(function() {
-				slideBreakNews();
-			});
-/*
-			$('#carousel-globe').on('slide.bs.carousel', function () {
-				var index = $('#carousel-globe .active').index('#carousel-globe .item');
-				for( var i = 0; i < points.length; i++ ) {
-					prevValues[i] = points[i].scale.z;
-				}
-			});
-
-			$('#carousel-globe').on('slid.bs.carousel', function () {
-				var index = $('#carousel-globe .active').index('#carousel-globe .item');
-				//alert( index );
-				slidePoints( index );
-			})
-*/
-			//
-			requestAnimationFrame( animate );
-			//
-			$("div[id='progress-bk']").css("visibility", "hidden");
+		//
+		var geometry = new THREE.SphereGeometry( globeRadius, 40, 30 );
+		//
+		group = new THREE.Object3D();
+		//
+		var shader = Shaders['earth'];
+		var uniforms = THREE.UniformsUtils.clone( shader.uniforms );
+		uniforms['diff'].value = tex1;
+		//
+		var material = new THREE.ShaderMaterial({
+				transparency:true,
+				uniforms: uniforms,
+				vertexShader: shader.vertexShader,
+				fragmentShader: shader.fragmentShader});
+		var mesh = new THREE.Mesh( geometry, material );
+		mesh.rotation.y = Math.PI;
+		globe = mesh;
+		group.add( mesh );
+		//
+		var shader = Shaders['atmosphere'];
+ 		var uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+     
+ 		var materiala = new THREE.ShaderMaterial({
+         uniforms: uniforms,
+         vertexShader: shader.vertexShader,
+         fragmentShader: shader.fragmentShader,
+		    side: THREE.BackSide,
+         blending: THREE.AdditiveBlending,
+         transparent: true
+       });
+		var mesh = new THREE.Mesh( geometry, materiala );
+		mesh.scale.set( globeGlowScale, globeGlowScale, globeGlowScale );
+		atmo = mesh;
+		group.add( mesh );
+		//
+		scene.add( group );
+		//
+		//
+		toggleBreakNews();
+		updateNews();
+		updateSocials();
+		updateStats();
+		//
+		// EVENTS
+		window.addEventListener( 'resize', resize, false );
+		//
+		$( window ).mousedown(function() {
+			slideBreakNews();
 		});
+/*
+		$('#carousel-globe').on('slide.bs.carousel', function () {
+			var index = $('#carousel-globe .active').index('#carousel-globe .item');
+			for( var i = 0; i < points.length; i++ ) {
+				prevValues[i] = points[i].scale.z;
+			}
+		});
+
+		$('#carousel-globe').on('slid.bs.carousel', function () {
+			var index = $('#carousel-globe .active').index('#carousel-globe .item');
+			//alert( index );
+			slidePoints( index );
+		})
+*/
+		//
+		requestAnimationFrame( animate );
+		//
+		$("div[id='progress-bk']").css("visibility", "hidden");
 	});
 }
 
@@ -323,13 +317,23 @@ function render( timestamp ) {
 	}
 	
 	//
-	if ( group != null ) {
-		group.rotation.x = 0.0;//23.439281 * Math.PI / 180.0;
-		group.rotation.y += dt * globeRotationSpeed;
-		group.rotation.z = 0.0;
-	}
+	var x = 0.0;//23.439281 * Math.PI / 180.0;
+	var y = dt * globeRotationSpeed;
+	var z = 0.0;
+	//
 	renderer.clear();
-	renderer.render(scene, camera);
+	if ( ( scene != null ) && ( group != null ) ) {
+		group.rotation.x = x;
+		group.rotation.y += y;
+		group.rotation.z = z;
+		renderer.render( scene, camera );
+	}
+	if ( ( sceneDyn != null ) && ( groupDyn != null ) ) {
+		groupDyn.rotation.x = x;
+		groupDyn.rotation.y += y;
+		groupDyn.rotation.z = z;
+		renderer.render( sceneDyn, camera );
+	}
 }
 
 /*
