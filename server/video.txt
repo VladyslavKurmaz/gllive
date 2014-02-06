@@ -1,0 +1,13 @@
+Hi. My name is vladyslav and I would like to introduce "GlobalLogic Live" project as part of the POC initiative.
+
+In nutshell, GLLive aims to present company as solid structure or, if you want, like living organism.
+
+There are two main parts.
+First one is about news feed. Open page should provide company overview from global and local perspectives at the same time.
+The second part displays aggregated statistics about the company around the globe.
+
+Behind the scene, GLLIve is initial Big Data Analysis for Global Logic infractucture.
+The key idea is to put together data from different sources like GLO, local portals, HR & IT departments etc.
+
+
+real time or near to real time

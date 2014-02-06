@@ -245,11 +245,12 @@ function init() {
 				//
 				$( window ).mousedown(function() {
 					slideBreakNews();
+					$("div[id='progress-bk']").css("visibility", "hidden");
 				});
 				//
 				requestAnimationFrame( animate );
 				//
-				$("div[id='progress-bk']").css("visibility", "hidden");
+				//$("div[id='progress-bk']").css("visibility", "hidden");
 			});
 		});
 	});
@@ -377,7 +378,7 @@ function render( timestamp ) {
 			pointsSlideTime = 0;
 		}
 		//
-		var mlt = ( newsSlideTimeout - pointsSlideTime ) / newsSlideTimeout;
+		var mlt = ( pointsSlideTimeout - pointsSlideTime ) / pointsSlideTimeout;
 		window.console.log(dt, pointsSlideTime, mlt);
 		for( var i = 0; i < points.length; i++ ) {
 			var v = prevValues[i] + ( nextValues[i] - prevValues[i] ) * mlt;
@@ -387,7 +388,7 @@ function render( timestamp ) {
 	}
 	//
 	var x = 0.0;//23.439281 * Math.PI / 180.0;
-	var y = 0.0;//dt * globeRotationSpeed;
+	var y = dt * globeRotationSpeed;
 	var z = 0.0;
 	//
 	renderer.clear();
