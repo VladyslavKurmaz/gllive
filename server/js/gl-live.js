@@ -250,7 +250,7 @@ function init() {
 				//
 				requestAnimationFrame( animate );
 				//
-				//$("div[id='progress-bk']").css("visibility", "hidden");
+				$("div[id='progress-bk']").css("visibility", "hidden");
 			});
 		});
 	});
@@ -346,7 +346,7 @@ function slidePoints( n ) {
 		nextValues[i] = stats.stat[n].data[i];
 	}
 	pointsSlideTime = pointsSlideTimeout;
-	window.console.log("slide");
+	//window.console.log("slide");
 }
 
 function latlng2sph( lat, lng, r ) {
@@ -379,7 +379,7 @@ function render( timestamp ) {
 		}
 		//
 		var mlt = ( pointsSlideTimeout - pointsSlideTime ) / pointsSlideTimeout;
-		window.console.log(dt, pointsSlideTime, mlt);
+		//window.console.log(dt, pointsSlideTime, mlt);
 		for( var i = 0; i < points.length; i++ ) {
 			var v = prevValues[i] + ( nextValues[i] - prevValues[i] ) * mlt;
  			points[i].scale.z = v;
