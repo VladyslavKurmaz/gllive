@@ -1,13 +1,32 @@
-Hi. My name is vladyslav and I would like to introduce "GlobalLogic Live" project as part of the POC initiative.
+#loading screen
+Hi.
+My name is Vladyslav and I would like to introduce "GlobalLogic Live" project as part of the POC initiative.
 
-In nutshell, GLLive aims to present company as solid structure or, if you want, like living organism.
+#globe
+In nutshell, GLLive aims to present company as solid structure or, if you want, like a living organism.
+We want to collect and broadcast as more data as we can for company employees.
 
-There are two main parts.
-First one is about news feed. Open page should provide company overview from global and local perspectives at the same time.
-The second part displays aggregated statistics about the company around the globe.
+# news screen
+There are two main parts of the project.
+First is an news scaner. One page dashboard should hightlight company from different perspectives at the same time.
+We plan to use all possible sources like facebook, twitter, bloomberg and other.
 
+# globe
+The second part displays aggregated statistics for the company around the globe.
+We want to gether numbers about sales, engineers, employees, vacancies, projects, relations between different offices and so on.
+You can think of it like as number of hyperplanes that allow observe company from different sides.
+
+# globe + text on video
+Technically, project is based on web stack: Apache, PHP, HTML, WebGL and Java script.
+It also uses public APIs and security access to the internal systems.
+
+# slide1
 Behind the scene, GLLIve is initial Big Data Analysis for Global Logic infractucture.
-The key idea is to put together data from different sources like GLO, local portals, HR & IT departments etc.
+The key idea is to put together data from different sources like GLO, local portals, HR, IT etc.
+Also system should collect information in real time or near to real time.
 
+# globe 
+As a first step, project could be used at the ofice reception or like a screensaver.  
 
-real time or near to real time
+# loading screen
+Thanks you.
