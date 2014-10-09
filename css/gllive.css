@@ -1,0 +1,106 @@
+html {
+	height: 100%;
+}
+body {
+  margin:0px;
+  padding:0px;
+	overflow: hidden;
+	background-color:black;
+	font-family:"Neue Haas Grotesk";
+	font-weight:bold;
+}
+
+#viewport {
+	margin:0px;
+	border:0px;
+	padding:0px;
+}
+
+#carousel-globe {
+	position:absolute;
+	left:0px;
+  right:0px;
+  bottom:0px;
+	margin:auto;
+	color:white;
+	text-align:center;
+	font-family:'Neue Haas Grotesk';
+	font-size:72px;
+	color:#a1a1a1;
+}
+
+.news-panel {
+	position: absolute;
+	background-color:black;
+}
+.news-content {
+	padding:10px;
+}
+.news-bk {
+	background-color:black;
+}
+.social-bk {
+	background-color:black;
+}
+.news-font {
+	font-family:"Neue Haas Grotesk";
+	font-weight:bold;
+}
+.news-title {
+	padding:10px;
+	margin:0px;
+	color:#777;
+	color:#a1a1a1;
+}
+.news-location {
+	padding-left:10px;
+	padding-right:10px;
+	color:#f3a137;
+}
+.news-details {
+	padding-left:10px;
+	padding-right:10px;
+	color:#777;
+}
+.social-feed {
+	background:black;
+	border-color:#444;
+	color:#cfcfcf;
+}
+
+#splash {
+	position:absolute;
+	left:0px;
+	top:0px;
+  right:0px;
+  bottom:0px;
+	margin:auto;
+}
+#progress {
+	position:absolute;
+	left:0px;
+  right:0px;
+  bottom:0px;
+	margin:auto;
+}
+#progress-bk {
+	position:fixed;
+	top:0;
+	bottom:0;
+	left:0;
+	right:0;
+	background:#303030;
+}
+
+#logo {
+	position:absolute;
+	left:2px;
+	top:2px;
+}
+#live {
+	position:absolute;
+	top:-8px;
+  right:-4px;
+	width:100px;
+	height:62px;
+}

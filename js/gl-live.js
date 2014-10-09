@@ -45,7 +45,7 @@ var bkColor 							= 0x000000;
 var fov										= 30;
 var nearPlane							=	0.1;
 var farPlane							=	1000;
-var texName								= 'img/world.jpg';
+var texName								= 'img/world.png';//jpg';
 var pointsSlideTime				= 0.0;
 
 var pointSize							= 0.015;
@@ -159,6 +159,15 @@ function init() {
 		//
 		scene.add( group );
 		//
+		// background
+		var bg = new THREE.Mesh(
+		  new THREE.PlaneGeometry(6.4, 3.6, 0),
+//		  new THREE.MeshBasicMaterial({color: 0xFFFFFF})
+		  new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("img/bk.png")})
+		);
+		bg.position.z = -1;
+		scene.add( bg );
+		//
 		$.getJSON( 'locations.php', function( data ) {
 			//
 			prevValues = new Array( data.location.length );
@@ -235,7 +244,7 @@ function init() {
 				// start points sliding
 				slidePoints( 0 );
 				//
-				toggleBreakNews();
+				//toggleBreakNews();
 				updateNews();
 				updateSocials();
 				updateStats();
