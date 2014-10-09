@@ -161,7 +161,7 @@ function init() {
 		//
 		// background
 		var bg = new THREE.Mesh(
-		  new THREE.PlaneGeometry(6.4, 3.6, 0),
+		  new THREE.PlaneGeometry(7.04, 3.96, 0),
 //		  new THREE.MeshBasicMaterial({color: 0xFFFFFF})
 		  new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture("img/bk.png")})
 		);
@@ -244,7 +244,7 @@ function init() {
 				// start points sliding
 				slidePoints( 0 );
 				//
-				//toggleBreakNews();
+				toggleBreakNews();
 				updateNews();
 				updateSocials();
 				updateStats();

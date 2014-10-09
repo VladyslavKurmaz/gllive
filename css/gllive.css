@@ -29,6 +29,19 @@ body {
 	color:#a1a1a1;
 }
 
+#carousel-stats {
+	position:absolute;
+	left:0px;
+  right:10%;
+  bottom:25%;
+	margin:auto;
+	color:white;
+	text-align:right;
+	font-family:'Neue Haas Grotesk';
+	font-size:72px;
+	color:#a1a1a1;
+}
+
 .news-panel {
 	position: absolute;
 	background-color:black;
