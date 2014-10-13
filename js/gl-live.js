@@ -356,6 +356,9 @@ function slidePoints( n ) {
 	}
 	pointsSlideTime = pointsSlideTimeout;
 	//window.console.log("slide");
+	// set text
+	$('#carousel-stats').text( stats.stat[n].value );
+	$('#carousel-desc').text( stats.stat[n].desc );
 }
 
 function latlng2sph( lat, lng, r ) {
